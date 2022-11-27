@@ -29,7 +29,7 @@
 
 # Решение 2
 
-    ![Скриншот Docker swarm node ls.png](https://github.com/EfanRu/DevOpsTask4.1/blob/main/src/img.png?raw=true)
+![Скриншот Docker swarm node ls](images/task5-5-img.png?raw=true)
 
 
 # Задание 3
@@ -41,7 +41,7 @@
 
 # Решение 3
 
-    ![Скриншот Docker swarm services](https://github.com/EfanRu/DevOpsTask4.1/blob/main/src/img2.png?raw=true)
+![Скриншот Docker swarm services](images/task5-5-img2.png?raw=true)
 
 
 # Задание 4
