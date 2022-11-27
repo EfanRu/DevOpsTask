@@ -29,7 +29,7 @@
 
 # Решение 2
 
-    Скриншот Docker swarm node ls.png
+    ![images/img.png](images/img.png)Скриншот Docker swarm node ls.png
 
 
 # Задание 3
@@ -41,4 +41,30 @@
 
 # Решение 3
 
-    Пока тут трудности с тем, чтобы через ansible  автоматически установить docker. Надеюсь разберусь в ближайшее время нужно чуть больше времени.
+    ![images/img2.png](images/img2.png)
+
+
+# Задание 4
+
+    Выполнить на лидере Docker Swarm кластера команду (указанную ниже) и дать письменное описание её функционала, 
+    что она делает и зачем она нужна:
+
+    # см.документацию: https://docs.docker.com/engine/swarm/swarm_manager_locking/
+    docker swarm update --autolock=true
+
+# Решение 4
+
+    Docker swarm autolock необходим для автоматического шифрования ключей от управления нодами swarm, которые передаются 
+    им автоматически после перезагрузки. Таким образом после перезагрузки docker swar нужно будет ввести ключ 
+    от автоматического шифрования.
+
+
+    slava@manager-01:~$ sudo docker swarm update --autolock=true
+    Swarm updated.
+    To unlock a swarm manager after it restarts, run the `docker swarm unlock`
+    command and provide the following key:
+    
+        SWMKEY-1-...
+    
+    Please remember to store this key in a password manager, since without it you
+    will not be able to restart the manager.
