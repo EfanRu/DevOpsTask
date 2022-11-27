@@ -29,7 +29,7 @@
 
 # Решение 2
 
-    ![images/img.png](images/img.png)Скриншот Docker swarm node ls.png
+    ![img.png](img.png)Скриншот Docker swarm node ls.png
 
 
 # Задание 3
@@ -41,7 +41,7 @@
 
 # Решение 3
 
-    ![images/img2.png](images/img2.png)
+    ![img2.png](img2.png)
 
 
 # Задание 4
