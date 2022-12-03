@@ -6,6 +6,12 @@
 
 # Решение 1
 
+    Создаем контейнер с postgresDB через 
+[docker-compose.yml](docker-compose.yml)
+
+    Указываем 2 volume для сохранения данных БД и бекапов:
+      - .:/var/lib/postgresql/test_db
+      - .:/var/lib/postgresql/test_db_backup
 
 # Задание 2
     
