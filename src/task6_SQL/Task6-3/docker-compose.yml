@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  postgres:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: "pwwd"
+    volumes:
+      - .:/backup
+    ports:
+      - "3306:3306"
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 3G
