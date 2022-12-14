@@ -1,0 +1,17 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: "slava"
+      POSTGRES_PASSWORD: "pwwd"
+      PGDATA: /my_vol/postgres
+    volumes:
+      - .:/my_vol
+    ports:
+      - "5432:5432"
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 3G
