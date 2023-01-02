@@ -1,0 +1,8 @@
+#cloud-config
+users:
+  - name: slava
+    groups: sudo
+    shell: /bin/bash
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    ssh_authorized_keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCg8HHp87Lkvgnis14mFmLrRNVihYV/p9sjcBKK6d8VnQgk9dSvRuBMXSPR4riOrUp48chV5cKxEPvfhvzrtIh6Z5gPwv2wzbOuT3p0AcydejL99HDIWfz0xonXTJ/tdlgB5zSAy1+bxchBKfUfD/w8wB0E6BuwF+ySD8lfoRe3baIoxu+hDatELv+Ccj3yezA3PkumfJSx07V50gbiJbgRWYYvFR6XJsaJxLxCMecm+lkqoyirvqvai86INnwRVSiHurFuf/JKNtvpe0lQZlJn6qjLoGQLlkR6Vh4bk1FrOSkAnC6KddJXG0TinfHf2aoMmKQ//yTYwmYb2oKkXWiJ5MKuiWFeAo/j3eWJTQqVGsaeqIoNPaKL9BNrgknBou6hpILra5Uo5KIt5AsaHRMwczUnzcL7tNiLpD1S/zwZ2dG3OjzW0s3hXkUGxCmPYzAlePvUnI1xLtw7vpLnO5zbCuJZ5Rh5rEsi+gqVdidL5ymeL4CQ2f4Nbq3XSlAM/xk= slava@slava-MS-7677
