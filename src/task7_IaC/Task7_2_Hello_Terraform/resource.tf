@@ -1,7 +1,7 @@
 resource "yandex_compute_instance" "vm1-ubuntu" {
   boot_disk {
     initialize_params {
-      image_id = "fd8bfmkt64o90eu4pksv"
+      image_id = yandex_compute_image.ubuntu_2004.id
     }
   }
   network_interface {

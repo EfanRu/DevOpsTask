@@ -120,3 +120,8 @@ Note: You didn't use the -out option to save this plan, so Terraform can't guara
 slava@slava-MS-7677:~/Documents/netology/my_homework/DevOpsTask/src/task7_IaC/Task7_2_Hello_Terraform$ 
 
 ```
+
+
+	Ответ на вопрос: при помощи какого инструмента (из разобранных на прошлом занятии) можно создать свой образ ami?
+		AMI - это поддерживаемый образ для Amazon. У нас немного все Yandex cloud, а в нем подобного определения я не нашел есть только образы и Yandex Cloud Marketplace.
+		Сделать это можно с помощью Packer.

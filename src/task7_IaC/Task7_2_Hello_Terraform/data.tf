@@ -1,3 +1,3 @@
-data "yandex_compute_image" "centos" {
-  family = "centos-7"
+resource "yandex_compute_image" "ubuntu_2004" {
+  source_family = "ubuntu-2004-lts"
 }
