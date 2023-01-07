@@ -10,8 +10,8 @@ terraform {
     bucket     = "my-first-bucket-by-slava"
     region     = "ru-central1"
     key        = "my_first_tfstate_file.tfstate"
-    access_key = "xxx"
-    secret_key = "xxx"
+    access_key = "YCAJE5Q6oQwkGKsGO3EaeuVLS"
+    secret_key = "YCNsYzIBuSnQ-riucw75ButrAykB1JPJ452M1_tv"
 
     skip_region_validation      = true
     skip_credentials_validation = true

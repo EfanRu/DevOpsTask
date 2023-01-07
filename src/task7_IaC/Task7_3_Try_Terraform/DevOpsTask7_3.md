@@ -41,7 +41,7 @@ secret: xxx
   
   	Выполняем инициализацию terraform и видим, что backend создался успешно:
  ```commandline
- slava@slava-MS-7677:~/Documents/netology/my_homework/DevOpsTask/src/task7_IaC/Task7_3_Try_Terraform$ terraform init
+ slava@slava-MS-7677:~/$ terraform init
 
 Initializing the backend...
 
@@ -66,4 +66,40 @@ use this backend unless the backend configuration changes.
     Вывод команды terraform workspace list.
     Вывод команды terraform plan для воркспейса prod.
 
+# Решение 2
+	Бэкенд создан был в Задании 1.
+	Создаем воркспейсы stage и prod:
+```commandline
+slava@slava-MS-7677:~/$ terraform workspace new stage
+Created and switched to workspace "stage"!
+
+You're now on a new, empty workspace. Workspaces isolate their state,
+so if you run "terraform plan" Terraform will not see any existing state
+for this configuration.
+slava@slava-MS-7677:~/$ terraform workspace new prod
+Created and switched to workspace "prod"!
+
+You're now on a new, empty workspace. Workspaces isolate their state,
+so if you run "terraform plan" Terraform will not see any existing state
+```
+
+	Делаем выбор в зависимости от workspace выбор дистрибутива:
+```json
+locals {
+  image_id = {
+    stage = yandex_compute_image.ubuntu_2004.id,
+    prod  = yandex_compute_image.ubuntu-20-04-lts.id
+  }
+}```
+
+```json
+resource "yandex_compute_instance" "vm1-ubuntu" {
+  boot_disk {
+    initialize_params {
+      image_id = local.image_id[terraform.workspace]
+    }
+  }
+}```
+
+	
 
