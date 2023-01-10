@@ -3,6 +3,5 @@ resource "yandex_compute_image" "ubuntu_2004" {
 }
 
 resource "yandex_compute_image" "ubuntu-20-04-lts" {
-  source_family = "ubuntu-2004-lts",
-  id = "fd8jekrp7jglcetucr2a"
+  source_family = "ubuntu-2004-lts"
 }

@@ -15,4 +15,8 @@ locals {
     stage = yandex_compute_image.ubuntu_2004.id,
     prod  = yandex_compute_image.ubuntu-20-04-lts.id
   }
+  count = {
+    stage = 1,
+    prod = 2
+  }
 }
