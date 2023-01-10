@@ -112,9 +112,10 @@ resource "yandex_compute_instance" "vm1-ubuntu" {
 }
 ```
 
-    Допиливаем варианты с count и for_each и вызываем terraform plan:
+    Допиливаем варианты с count и for_each и вызываем terraform plan для workspace prod:
 
 ```commandline
+slava@slava-MS-7677:~/Documents/netology/my_homework/DevOpsTask/src/task7_IaC/Task7_3_Try_Terraform$ terraform workspace select prod
 slava@slava-MS-7677:~/Documents/netology/my_homework/DevOpsTask/src/task7_IaC/Task7_3_Try_Terraform$ terraform plan
 
 Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
