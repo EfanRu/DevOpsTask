@@ -1,0 +1,40 @@
+repos:
+- id: github.com/EfanRu/DevOpsTask
+  branch: /main/
+  repo_config_file: atlantis.yaml
+  apply_requirements: [approved]
+  import_requirements: [approved]
+
+  workflow: custom
+  allowed_overrides: [workflow]
+  allowed_workflows: [prod, stage]
+  allow_custom_workflows: false
+  delete_source_branch_on_merge: true
+  repo_locking: false
+  api-secret: "myapisecret"
+
+workflows:
+  stage:
+    plan:
+      steps:
+      - run: my-custom-command arg1 arg2
+      - init
+      - plan:
+          extra_args: ["-lock", "false"]
+      - run: my-custom-command arg1 arg2
+    apply:
+      steps:
+      - run: echo hi
+      - apply
+  prod:
+    plan:
+      steps:
+      - run: my-custom-command arg1 arg2
+      - init
+      - plan:
+          extra_args: ["-lock", "false"]
+      - run: my-custom-command arg1 arg2
+    apply:
+      steps:
+      - run: echo hi
+      - apply
