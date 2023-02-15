@@ -175,3 +175,120 @@ ok: [centos] => {
 
 # Решение 12
     Сделано
+
+
+## Необязательная часть
+
+# Задание 1
+    При помощи `ansible-vault` расшифруйте все зашифрованные файлы с переменными.
+
+# Решение 1
+    Так как у нас зашированы не файлы а переменные, то расшифровка их будет следующей:
+```commandline
+echo '$ANSIBLE_VAULT;1.1;AES256
+63636433353266363839303434643738396134393763323536366235323136373438366631353530
+3731633330376465323866346236393130653237353338620a316339333236363366653963633165
+37353062623966613131316564616138653762313866663830643566353163623537636362636337
+3134343039636635340a623135306435353330396339656162343132636537303565633366303839
+3762' | ansible-vault decrypt --ask-vault-pass && echo
+Vault password: 
+Decryption successful
+el default fact
+```
+    или без самого ключа, чтобы проще было прочитать:
+```commandline
+echo '<encrypt text>' | ansible-vault decrypt --ask-vault-pass && echo
+```
+
+# Задание 2
+    Зашифруйте отдельное значение `PaSSw0rd` для переменной `some_fact` паролем `netology`. Добавьте полученное значение в `group_vars/all/exmp.yml`.
+
+# Решение 2
+    Щтфруем значение и сетим его в group_vars/all/exmp.yml
+
+```commandline
+ansible-vault encrypt_string
+New Vault password: 
+Confirm New Vault password: 
+Reading plaintext input from stdin. (ctrl-d to end input, twice if your content does not already have a newline)
+PaSSw0rd
+!vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          38383063353231653432333064343764393164333034663538393535336237323234656239393531
+          3932343264346565396637336161626633656130356536340a396566353562626466373865363838
+          35383035313635373037646462336431636561623531613132623637333837313135323266356232
+          6561316330373266650a613365316362303161306638323338336537396330616532643762643165
+          3637
+Encryption successful
+```
+
+# Задание 3
+    Запустите `playbook`, убедитесь, что для нужных хостов применился новый `fact`.
+
+# Решение 3
+```commandline
+ansible-playbook -i ./playbook/inventory/prod.yml ./playbook/site.yml --ask-vault-pass
+TASK [Print fact] ****************************************************************************************************************************
+ok: [my_local] => {
+    "msg": "PaSSw0rd"
+}
+ok: [centos] => {
+    "msg": "el default fact"
+}
+ok: [ubuntu] => {
+    "msg": "deb default fact"
+}
+```
+
+# Задание 4
+    Добавьте новую группу хостов `fedora`, самостоятельно придумайте для неё переменную. В качестве образа можно использовать [этот](https://hub.docker.com/r/pycontribs/fedora).
+
+# Решение 4
+    Дополняем inventory/prod.yml:
+```yml
+  fed:
+    hosts:
+      fedora:
+        ansible_connection: docker
+```
+    Скачиваем через Docker образ и запускаем его:
+```commandline
+docker pull fedora
+docker run -d --name fedora fedora tail -f /dev/null
+```
+
+    Запускаем playbook:
+```commandline
+ansible-playbook -i ./playbook/inventory/prod.yml ./playbook/site.yml --ask-vault-pass
+TASK [Print fact] ****************************************************************************************************************************
+ok: [my_local] => {
+    "msg": "PaSSw0rd"
+}
+ok: [centos] => {
+    "msg": "el default fact"
+}
+ok: [ubuntu] => {
+    "msg": "deb default fact"
+}
+ok: [fedora] => {
+    "msg": "PaSSw0rd"
+}
+```
+
+# Задание 5
+    Напишите скрипт на bash: автоматизируйте поднятие необходимых контейнеров, запуск ansible-playbook и остановку контейнеров.
+
+# Решение 5
+    Поднятие контейнеров и установка на Ubuntu python:
+[run_containers](playbook%2Fbash_scripts%2Frun_containers)
+
+    Запуск playbook:
+[run_playbook_prod](playbook%2Fbash_scripts%2Frun_playbook_prod)
+
+    Остановка и удаление контейнеров
+[stop_and_rm_all_containers](playbook%2Fbash_scripts%2Fstop_and_rm_all_containers)
+
+# Задание 6
+    Все изменения должны быть зафиксированы и отправлены в вашей личный репозиторий.
+
+# Решение 6

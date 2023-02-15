@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# run containers
+docker run -d --name ubuntu ubuntu tail -f /dev/null
+docker run -d --name centos centos tail -f /dev/null
+docker run -d --name fedora fedora tail -f /dev/null
+
+# install on ubuntu python3
+docker exec ubuntu apt-get update
+docker exec ubuntu apt-get install -y python3
+

@@ -7,6 +7,10 @@
     hosts:
       ubuntu:
         ansible_connection: docker
+  fed:
+    hosts:
+      fedora:
+        ansible_connection: docker
   my_local:
     hosts:
       my_local:
