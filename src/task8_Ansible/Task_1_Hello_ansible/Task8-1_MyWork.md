@@ -116,25 +116,20 @@ ok: [ubuntu] => {
 
 # Решение 9
 
-    Смотрим плагины become через команду:
+    Так и не понял в чем ошибка в моей предыдущей версии работы. Догадываюсь, что plugin become sudo выполняется не на control node. 
+    Тогда нам подходит plugin connection paramiko_ssh. Он работает на Ansible control machine (control node).  
 ```commandline
-ansible-doc -t become -l 
-
-ansible.netcommon.enable     Switch to elevated permissions on a network device                                                          
-community.general.doas       Do As user                                                                                                  
-community.general.dzdo       Centrify's Direct Authorize                                                                                 
-community.general.ksu        Kerberos substitute user                                                                                    
-community.general.machinectl Systemd's machinectl privilege escalation                                                                   
-community.general.pbrun      PowerBroker run                                                                                             
-community.general.pfexec     profile based execution                                                                                     
-community.general.pmrun      Privilege Manager run                                                                                       
-community.general.sesu       CA Privileged Access Manager                                                                                
-runas                        Run As user                                                                                                 
-su                           Substitute User                                                                                             
-sudo                         Substitute User DO 
+ansible-doc -t connection -l
+...   
+local                          execute on controller                         
+paramiko_ssh                   Run tasks via python ssh (paramiko)           
+psrp                           Run tasks over Microsoft PowerShell Remoting P...
+ssh                            connect via ssh client binary                 
+winrm                          Run tasks over Microsoft's WinRM   
 ```
 
-    Выберем например плагин sudo. Хотя не понимаю зачем он нам сейчас.
+    Выберем например плагин paramiko_ssh.
+    Всё также не понимаю, почему в задании указано всего лишь выбрать его. Ну выбрал. Нет указаний его установить или использовать.
 
 # Задание 10
     В `prod.yml` добавьте новую группу хостов с именем  `local`, в ней разместите localhost с необходимым типом подключения.
