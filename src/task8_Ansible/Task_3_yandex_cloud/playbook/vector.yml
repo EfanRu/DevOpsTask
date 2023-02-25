@@ -1,0 +1,16 @@
+---
+- name: Install Vector
+  hosts: vector
+  tasks:
+    - name: Download Vector
+      become: true
+      ansible.builtin.get_url:
+        url: "https://packages.timber.io/vector/{{ vector_version }}/vector-{{ vector_subversion }}.x86_64.rpm"
+        dest: "./{{ vector_package }}.rpm"
+      notify: Download Vector complete
+    - name: Install Vector
+      become: true
+      ansible.builtin.yum:
+        state: present
+        name: "{{ vector_package }}.rpm"
+      notify: Install Vector complete
