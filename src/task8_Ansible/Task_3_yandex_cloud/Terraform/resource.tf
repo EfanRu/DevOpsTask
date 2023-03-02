@@ -13,7 +13,7 @@ resource "yandex_compute_instance" "clickhouse-01" {
     memory = 4
   }
   metadata = {
-    ssh-keys = "slava:${file("~/.ssh/yac.pub")}"
+    ssh-keys = "slava:${file("~/.ssh/yac2.pub")}"
   }
 }
 
@@ -32,7 +32,7 @@ resource "yandex_compute_instance" "vector-01" {
     memory = 2
   }
   metadata = {
-    ssh-keys = "slava:${file("~/.ssh/yac.pub")}"
+    ssh-keys = "slava:${file("~/.ssh/yac2.pub")}"
   }
 }
 
@@ -51,6 +51,6 @@ resource "yandex_compute_instance" "lighthouse-01" {
     memory = 2
   }
   metadata = {
-    ssh-keys = "slava:${file("~/.ssh/yac.pub")}"
+    ssh-keys = "slava:${file("~/.ssh/yac2.pub")}"
   }
 }

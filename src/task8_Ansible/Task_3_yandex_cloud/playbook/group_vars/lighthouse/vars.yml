@@ -1,0 +1,4 @@
+---
+nginx_user: root
+lighthouse_dir: /home/slava/lighthouse
+lighthouse_git_url: https://github.com/VKCOM/lighthouse.git
