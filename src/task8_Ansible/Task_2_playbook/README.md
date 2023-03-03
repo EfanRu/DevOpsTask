@@ -1,17 +1,14 @@
 # Ansible playbooks с установкой clickhouse и vector
 
-## Общее
+## About
+    Playbook с установкой коллектора логов vector и БД clickhouse для него.
+    Выполненно в качестве обучающего проекта.
 
-1. Версии и список подпрограмм указываются в group_vars/названиюе программы.
-2. Тегов нет.
-3. Так как Vector и Clickhouse работают на одном сервере, то в настройках они прописаны 
-как отдельные host, но в inventory ссылаются на один и тотже host. Таким образом, 
-при разносе их на разные сервера достаточно поменять только inventory файлы.
-
-## Clickhouse
-1. Скачивается noarch версия архитектуры, кроме clickhouse-common-static, для него x86_64.
-
-## Vector
-1. Скачивается версия для x86_64 архитектуры.
+## Quick start
+    - Нужно создать сервер на Centos или аналоге с поддержкой yum, например в Yandex cloud;
+    - Добавить IP адрес сервера в iunventory/prod.yml: ansible_host;
+    - Запустить через ansible playpook. Для clickhouse playbook называется site.yml (сохранено 
+    для синхронизации с заданием). Для vector playbook называется vector.yml. Запуск осуществляется командой:
+    ansible-playbook -i ./playbook/inventory/prod.yml ./playbook/<имя файла playbook>
 
 ---
