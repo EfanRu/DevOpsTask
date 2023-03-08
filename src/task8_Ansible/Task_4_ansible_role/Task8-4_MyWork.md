@@ -131,11 +131,15 @@ $ansible-galaxy role init lighthouse-role
     Выложите playbook в репозиторий.
 
 ### Решение 10
-
+[Playbook]https://github.com/EfanRu/DevOpsTask/blob/main/src/task8_Ansible/Task_4_ansible_role/playbook/main.yml()
 
 ### Задание 11
     В ответе дайте ссылки на оба репозитория с roles и одну ссылку на репозиторий с playbook.
 
 ### Решение 11
+[playbook](https://github.com/EfanRu/DevOpsTask/tree/main/src/task8_Ansible/Task_4_ansible_role)
 
+[vactor-role](https://github.com/EfanRu/vector-role)
+
+[lighthouse-role](https://github.com/EfanRu/lighthouse-role)
 ---
