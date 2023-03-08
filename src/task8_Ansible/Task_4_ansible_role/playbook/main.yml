@@ -1,0 +1,28 @@
+---
+- hosts: all
+  pre_tasks:
+    - name: Install git
+      become: true
+      ansible.builtin.yum:
+        name: git
+        state: present
+    - name: Install Python
+      become: true
+      ansible.builtin.yum:
+        name: python3
+        state: present
+- hosts: lighthouse
+  remote_user: slava
+  roles:
+    - lighthouse-role
+- hosts: vector
+  remote_user: slava
+  roles:
+    - vector-role
+- hosts: clickhouse
+  remote_user: slava
+  vars:
+    - clickhouse_listen_host_default:
+        - "51.250.5.111"
+  roles:
+    - clickhouse
