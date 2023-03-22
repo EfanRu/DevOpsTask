@@ -957,7 +957,529 @@ ERROR:   py39-ansible30: commands failed
 
 <details><summary>Вывод в консоль:</summary>
 
+```commandline
+python3 -m tox
+py37-ansible210 installed: ansible==2.10.7,ansible-base==2.10.17,ansible-compat==1.0.0,ansible-lint==5.1.3,arrow==1.2.3,bcrypt==4.0.1,binaryornot==0.4.4,bracex==2.3.post1,cached-property==1.5.2,Cerberus==1.3.2,certifi==2022.12.7,cffi==1.15.1,chardet==5.1.0,charset-normalizer==3.1.0,click==8.1.3,click-help-colors==0.9.1,cookiecutter==2.1.1,cryptography==39.0.2,distro==1.8.0,enrich==1.2.7,idna==3.4,importlib-metadata==6.1.0,Jinja2==3.1.2,jinja2-time==0.2.0,jmespath==1.0.1,lxml==4.9.2,markdown-it-py==2.2.0,MarkupSafe==2.1.2,mdurl==0.1.2,molecule==3.4.0,molecule-podman==1.0.1,packaging==23.0,paramiko==2.12.0,pathspec==0.11.1,pluggy==0.13.1,pycparser==2.21,Pygments==2.14.0,PyNaCl==1.5.0,python-dateutil==2.8.2,python-slugify==8.0.1,PyYAML==5.4.1,requests==2.28.2,rich==13.3.2,ruamel.yaml==0.17.21,ruamel.yaml.clib==0.2.7,selinux==0.2.1,six==1.16.0,subprocess-tee==0.3.5,tenacity==8.2.2,text-unidecode==1.3,typing_extensions==4.5.0,urllib3==1.26.15,wcmatch==8.4.1,yamllint==1.26.3,zipp==3.15.0
+py37-ansible210 run-test-pre: PYTHONHASHSEED='3489487170'
+py37-ansible210 run-test: commands[0] | molecule test -s default --destroy always
+INFO     default scenario test matrix: dependency, lint, cleanup, destroy, syntax, create, prepare, converge, idempotence, side_effect, verify, cleanup, destroy
+INFO     Performing prerun...
+INFO     Guessed /home/slava/Documents/DevOpsTask as project root directory
+INFO     Using /home/slava/.cache/ansible-lint/cf8d39/roles/my_galaxy_namespace.vector_role symlink to current repository in order to enable Ansible to find the role using its expected full name.
+INFO     Added ANSIBLE_ROLES_PATH=~/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles:/home/slava/.cache/ansible-lint/cf8d39/roles
+INFO     Running default > dependency
+INFO     Running ansible-galaxy collection install --force -v containers.podman:>=1.7.0
+INFO     Running ansible-galaxy collection install --force -v ansible.posix:>=1.3.0
+WARNING  Skipping, missing the requirements file.
+WARNING  Skipping, missing the requirements file.
+INFO     Running default > lint
+INFO     Lint is disabled.
+INFO     Running default > cleanup
+WARNING  Skipping, cleanup playbook not configured.
+INFO     Running default > destroy
+INFO     Sanity checks: 'podman'
 
+PLAY [Destroy] *****************************************************************
+
+TASK [Destroy molecule instance(s)] ********************************************
+changed: [localhost] => (item={'image': 'docker.io/pycontribs/centos:8', 'name': 'centos', 'pre_build_image': True})
+changed: [localhost] => (item={'image': 'docker.io/pycontribs/ubuntu:latest', 'name': 'ubuntu', 'pre_build_image': True})
+
+TASK [Wait for instance(s) deletion to complete] *******************************
+changed: [localhost] => (item={'started': 1, 'finished': 0, 'ansible_job_id': '524462627738.20466', 'results_file': '/home/slava/.ansible_async/524462627738.20466', 'changed': True, 'failed': False, 'item': {'image': 'docker.io/pycontribs/centos:8', 'name': 'centos', 'pre_build_image': True}, 'ansible_loop_var': 'item'})
+changed: [localhost] => (item={'started': 1, 'finished': 0, 'ansible_job_id': '91258935304.20494', 'results_file': '/home/slava/.ansible_async/91258935304.20494', 'changed': True, 'failed': False, 'item': {'image': 'docker.io/pycontribs/ubuntu:latest', 'name': 'ubuntu', 'pre_build_image': True}, 'ansible_loop_var': 'item'})
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=2    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+
+INFO     Running default > syntax
+
+playbook: /home/slava/Documents/DevOpsTask/src/task8_Ansible/Task_5_testing_roles/vector_role/molecule/default/converge.yml
+INFO     Running default > create
+
+PLAY [Create] ******************************************************************
+
+TASK [get podman executable path] **********************************************
+ok: [localhost]
+
+TASK [save path to executable as fact] *****************************************
+ok: [localhost]
+
+TASK [Log into a container registry] *******************************************
+skipping: [localhost] => (item="centos registry username: None specified") 
+skipping: [localhost] => (item="ubuntu registry username: None specified") 
+
+TASK [Check presence of custom Dockerfiles] ************************************
+ok: [localhost] => (item=Dockerfile: None specified)
+ok: [localhost] => (item=Dockerfile: None specified)
+
+TASK [Create Dockerfiles from image names] *************************************
+skipping: [localhost] => (item="Dockerfile: None specified; Image: docker.io/pycontribs/centos:8") 
+skipping: [localhost] => (item="Dockerfile: None specified; Image: docker.io/pycontribs/ubuntu:latest") 
+
+TASK [Discover local Podman images] ********************************************
+ok: [localhost] => (item=centos)
+ok: [localhost] => (item=ubuntu)
+
+TASK [Build an Ansible compatible image] ***************************************
+skipping: [localhost] => (item=docker.io/pycontribs/centos:8) 
+skipping: [localhost] => (item=docker.io/pycontribs/ubuntu:latest) 
+
+TASK [Determine the CMD directives] ********************************************
+ok: [localhost] => (item="centos command: None specified")
+ok: [localhost] => (item="ubuntu command: None specified")
+
+TASK [Remove possible pre-existing containers] *********************************
+changed: [localhost]
+
+TASK [Discover local podman networks] ******************************************
+skipping: [localhost] => (item=centos: None specified) 
+skipping: [localhost] => (item=ubuntu: None specified) 
+
+TASK [Create podman network dedicated to this scenario] ************************
+skipping: [localhost]
+
+TASK [Create molecule instance(s)] *********************************************
+changed: [localhost] => (item=centos)
+changed: [localhost] => (item=ubuntu)
+
+TASK [Wait for instance(s) creation to complete] *******************************
+FAILED - RETRYING: Wait for instance(s) creation to complete (300 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (299 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (298 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (297 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (296 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (295 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (294 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (293 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (292 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (291 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (290 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (289 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (288 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (287 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (286 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (285 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (284 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (283 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (282 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (281 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (280 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (279 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (278 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (277 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (276 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (275 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (274 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (273 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (272 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (271 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (270 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (269 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (268 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (267 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (266 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (265 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (264 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (263 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (262 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (261 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (260 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (259 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (258 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (257 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (256 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (255 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (254 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (253 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (252 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (251 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (250 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (249 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (248 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (247 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (246 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (245 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (244 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (243 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (242 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (241 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (240 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (239 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (238 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (237 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (236 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (235 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (234 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (233 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (232 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (231 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (230 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (229 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (228 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (227 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (226 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (225 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (224 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (223 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (222 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (221 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (220 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (219 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (218 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (217 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (216 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (215 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (214 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (213 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (212 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (211 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (210 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (209 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (208 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (207 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (206 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (205 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (204 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (203 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (202 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (201 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (200 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (199 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (198 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (197 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (196 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (195 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (194 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (193 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (192 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (191 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (190 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (189 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (188 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (187 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (186 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (185 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (184 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (183 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (182 retries left).
+changed: [localhost] => (item=centos)
+FAILED - RETRYING: Wait for instance(s) creation to complete (300 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (299 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (298 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (297 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (296 retries left).
+FAILED - RETRYING: Wait for instance(s) creation to complete (295 retries left).
+changed: [localhost] => (item=ubuntu)
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=8    changed=3    unreachable=0    failed=0    skipped=5    rescued=0    ignored=0
+
+INFO     Running default > prepare
+WARNING  Skipping, prepare playbook not configured.
+INFO     Running default > converge
+
+PLAY [Converge] ****************************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [centos]
+ok: [ubuntu]
+
+TASK [Include vector_role] *****************************************************
+
+TASK [vector_role : Check need prepare Centos] *********************************
+skipping: [ubuntu]
+fatal: [centos]: FAILED! => {"changed": true, "cmd": ["grep", "http://vault.centos.org/$contentdir/$releasever/PowerTools/$basearch/os/", "/etc/yum.repos.d/CentOS-*"], "delta": "0:00:00.001660", "end": "2023-03-22 20:59:40.212492", "msg": "non-zero return code", "rc": 2, "start": "2023-03-22 20:59:40.210832", "stderr": "grep: /etc/yum.repos.d/CentOS-*: No such file or directory", "stderr_lines": ["grep: /etc/yum.repos.d/CentOS-*: No such file or directory"], "stdout": "", "stdout_lines": []}
+...ignoring
+
+TASK [vector_role : Prepare Centos] ********************************************
+skipping: [ubuntu]
+changed: [centos]
+
+TASK [vector_role : Download Vector for Centos] ********************************
+skipping: [ubuntu]
+changed: [centos]
+
+TASK [vector_role : Install Vector Centos] *************************************
+skipping: [ubuntu]
+changed: [centos]
+
+TASK [vector_role : Download Vector Ubuntu] ************************************
+skipping: [centos]
+changed: [ubuntu]
+
+TASK [vector_role : Install Vector Ubuntu] *************************************
+skipping: [centos]
+changed: [ubuntu]
+
+PLAY RECAP *********************************************************************
+centos                     : ok=5    changed=4    unreachable=0    failed=0    skipped=2    rescued=0    ignored=1   
+ubuntu                     : ok=3    changed=2    unreachable=0    failed=0    skipped=4    rescued=0    ignored=0
+
+INFO     Running default > idempotence
+
+PLAY [Converge] ****************************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [centos]
+ok: [ubuntu]
+
+TASK [Include vector_role] *****************************************************
+
+TASK [vector_role : Check need prepare Centos] *********************************
+skipping: [ubuntu]
+fatal: [centos]: FAILED! => {"changed": true, "cmd": ["grep", "http://vault.centos.org/$contentdir/$releasever/PowerTools/$basearch/os/", "/etc/yum.repos.d/CentOS-*"], "delta": "0:00:00.001590", "end": "2023-03-22 21:00:40.904237", "msg": "non-zero return code", "rc": 2, "start": "2023-03-22 21:00:40.902647", "stderr": "grep: /etc/yum.repos.d/CentOS-*: No such file or directory", "stderr_lines": ["grep: /etc/yum.repos.d/CentOS-*: No such file or directory"], "stdout": "", "stdout_lines": []}
+...ignoring
+
+TASK [vector_role : Prepare Centos] ********************************************
+skipping: [ubuntu]
+changed: [centos]
+
+TASK [vector_role : Download Vector for Centos] ********************************
+skipping: [ubuntu]
+ok: [centos]
+
+TASK [vector_role : Install Vector Centos] *************************************
+skipping: [ubuntu]
+ok: [centos]
+
+TASK [vector_role : Download Vector Ubuntu] ************************************
+skipping: [centos]
+ok: [ubuntu]
+
+TASK [vector_role : Install Vector Ubuntu] *************************************
+skipping: [centos]
+changed: [ubuntu]
+
+PLAY RECAP *********************************************************************
+centos                     : ok=5    changed=2    unreachable=0    failed=0    skipped=2    rescued=0    ignored=1   
+ubuntu                     : ok=3    changed=1    unreachable=0    failed=0    skipped=4    rescued=0    ignored=0
+
+CRITICAL Idempotence test failed because of the following tasks:
+*  => vector_role : Prepare Centos
+*  => vector_role : Install Vector Ubuntu
+WARNING  An error occurred during the test sequence action: 'idempotence'. Cleaning up.
+INFO     Running default > cleanup
+WARNING  Skipping, cleanup playbook not configured.
+INFO     Running default > destroy
+
+PLAY [Destroy] *****************************************************************
+
+TASK [Destroy molecule instance(s)] ********************************************
+changed: [localhost] => (item={'image': 'docker.io/pycontribs/centos:8', 'name': 'centos', 'pre_build_image': True})
+changed: [localhost] => (item={'image': 'docker.io/pycontribs/ubuntu:latest', 'name': 'ubuntu', 'pre_build_image': True})
+
+TASK [Wait for instance(s) deletion to complete] *******************************
+FAILED - RETRYING: Wait for instance(s) deletion to complete (300 retries left).
+FAILED - RETRYING: Wait for instance(s) deletion to complete (299 retries left).
+FAILED - RETRYING: Wait for instance(s) deletion to complete (298 retries left).
+changed: [localhost] => (item={'started': 1, 'finished': 0, 'ansible_job_id': '742338640298.36432', 'results_file': '/home/slava/.ansible_async/742338640298.36432', 'changed': True, 'failed': False, 'item': {'image': 'docker.io/pycontribs/centos:8', 'name': 'centos', 'pre_build_image': True}, 'ansible_loop_var': 'item'})
+changed: [localhost] => (item={'started': 1, 'finished': 0, 'ansible_job_id': '125979933025.36460', 'results_file': '/home/slava/.ansible_async/125979933025.36460', 'changed': True, 'failed': False, 'item': {'image': 'docker.io/pycontribs/ubuntu:latest', 'name': 'ubuntu', 'pre_build_image': True}, 'ansible_loop_var': 'item'})
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=2    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+
+INFO     Pruning extra files from scenario ephemeral directory
+ERROR: InvocationError for command /home/slava/Documents/DevOpsTask/src/task8_Ansible/Task_5_testing_roles/vector_role/.tox/py37-ansible210/bin/molecule test -s default --destroy always (exited with code 1)
+py37-ansible30 installed: ansible==3.0.0,ansible-base==2.10.17,ansible-compat==1.0.0,ansible-lint==5.1.3,arrow==1.2.3,bcrypt==4.0.1,binaryornot==0.4.4,bracex==2.3.post1,cached-property==1.5.2,Cerberus==1.3.2,certifi==2022.12.7,cffi==1.15.1,chardet==5.1.0,charset-normalizer==3.1.0,click==8.1.3,click-help-colors==0.9.1,cookiecutter==2.1.1,cryptography==39.0.2,distro==1.8.0,enrich==1.2.7,idna==3.4,importlib-metadata==6.1.0,Jinja2==3.1.2,jinja2-time==0.2.0,jmespath==1.0.1,lxml==4.9.2,markdown-it-py==2.2.0,MarkupSafe==2.1.2,mdurl==0.1.2,molecule==3.4.0,molecule-podman==1.0.1,packaging==23.0,paramiko==2.12.0,pathspec==0.11.1,pluggy==0.13.1,pycparser==2.21,Pygments==2.14.0,PyNaCl==1.5.0,python-dateutil==2.8.2,python-slugify==8.0.1,PyYAML==5.4.1,requests==2.28.2,rich==13.3.2,ruamel.yaml==0.17.21,ruamel.yaml.clib==0.2.7,selinux==0.2.1,six==1.16.0,subprocess-tee==0.3.5,tenacity==8.2.2,text-unidecode==1.3,typing_extensions==4.5.0,urllib3==1.26.15,wcmatch==8.4.1,yamllint==1.26.3,zipp==3.15.0
+py37-ansible30 run-test-pre: PYTHONHASHSEED='3489487170'
+py37-ansible30 run-test: commands[0] | molecule test -s default --destroy always
+INFO     default scenario test matrix: dependency, lint, cleanup, destroy, syntax, create, prepare, converge, idempotence, side_effect, verify, cleanup, destroy
+INFO     Performing prerun...
+INFO     Guessed /home/slava/Documents/DevOpsTask as project root directory
+INFO     Using /home/slava/.cache/ansible-lint/cf8d39/roles/my_galaxy_namespace.vector_role symlink to current repository in order to enable Ansible to find the role using its expected full name.
+INFO     Added ANSIBLE_ROLES_PATH=~/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles:/home/slava/.cache/ansible-lint/cf8d39/roles
+INFO     Running default > dependency
+WARNING  Skipping, missing the requirements file.
+WARNING  Skipping, missing the requirements file.
+INFO     Running default > lint
+INFO     Lint is disabled.
+INFO     Running default > cleanup
+WARNING  Skipping, cleanup playbook not configured.
+INFO     Running default > destroy
+INFO     Sanity checks: 'podman'
+
+PLAY [Destroy] *****************************************************************
+
+TASK [Destroy molecule instance(s)] ********************************************
+changed: [localhost] => (item={'image': 'docker.io/pycontribs/centos:8', 'name': 'centos', 'pre_build_image': True})
+changed: [localhost] => (item={'image': 'docker.io/pycontribs/ubuntu:latest', 'name': 'ubuntu', 'pre_build_image': True})
+
+TASK [Wait for instance(s) deletion to complete] *******************************
+changed: [localhost] => (item={'started': 1, 'finished': 0, 'ansible_job_id': '114165305187.36949', 'results_file': '/home/slava/.ansible_async/114165305187.36949', 'changed': True, 'failed': False, 'item': {'image': 'docker.io/pycontribs/centos:8', 'name': 'centos', 'pre_build_image': True}, 'ansible_loop_var': 'item'})
+changed: [localhost] => (item={'started': 1, 'finished': 0, 'ansible_job_id': '883906787888.36977', 'results_file': '/home/slava/.ansible_async/883906787888.36977', 'changed': True, 'failed': False, 'item': {'image': 'docker.io/pycontribs/ubuntu:latest', 'name': 'ubuntu', 'pre_build_image': True}, 'ansible_loop_var': 'item'})
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=2    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+
+INFO     Running default > syntax
+
+playbook: /home/slava/Documents/DevOpsTask/src/task8_Ansible/Task_5_testing_roles/vector_role/molecule/default/converge.yml
+INFO     Running default > create
+
+PLAY [Create] ******************************************************************
+
+TASK [get podman executable path] **********************************************
+ok: [localhost]
+
+TASK [save path to executable as fact] *****************************************
+ok: [localhost]
+
+TASK [Log into a container registry] *******************************************
+skipping: [localhost] => (item="centos registry username: None specified") 
+skipping: [localhost] => (item="ubuntu registry username: None specified") 
+
+TASK [Check presence of custom Dockerfiles] ************************************
+ok: [localhost] => (item=Dockerfile: None specified)
+ok: [localhost] => (item=Dockerfile: None specified)
+
+TASK [Create Dockerfiles from image names] *************************************
+skipping: [localhost] => (item="Dockerfile: None specified; Image: docker.io/pycontribs/centos:8") 
+skipping: [localhost] => (item="Dockerfile: None specified; Image: docker.io/pycontribs/ubuntu:latest") 
+
+TASK [Discover local Podman images] ********************************************
+ok: [localhost] => (item=centos)
+ok: [localhost] => (item=ubuntu)
+
+TASK [Build an Ansible compatible image] ***************************************
+skipping: [localhost] => (item=docker.io/pycontribs/centos:8) 
+skipping: [localhost] => (item=docker.io/pycontribs/ubuntu:latest) 
+
+TASK [Determine the CMD directives] ********************************************
+ok: [localhost] => (item="centos command: None specified")
+ok: [localhost] => (item="ubuntu command: None specified")
+
+TASK [Remove possible pre-existing containers] *********************************
+changed: [localhost]
+
+TASK [Discover local podman networks] ******************************************
+skipping: [localhost] => (item=centos: None specified) 
+skipping: [localhost] => (item=ubuntu: None specified) 
+
+TASK [Create podman network dedicated to this scenario] ************************
+skipping: [localhost]
+
+TASK [Create molecule instance(s)] *********************************************
+changed: [localhost] => (item=centos)
+changed: [localhost] => (item=ubuntu)
+
+TASK [Wait for instance(s) creation to complete] *******************************
+changed: [localhost] => (item=centos)
+changed: [localhost] => (item=ubuntu)
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=8    changed=3    unreachable=0    failed=0    skipped=5    rescued=0    ignored=0
+
+INFO     Running default > prepare
+WARNING  Skipping, prepare playbook not configured.
+INFO     Running default > converge
+
+PLAY [Converge] ****************************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [centos]
+ok: [ubuntu]
+
+TASK [Include vector_role] *****************************************************
+
+TASK [vector_role : Check need prepare Centos] *********************************
+skipping: [ubuntu]
+fatal: [centos]: FAILED! => {"changed": true, "cmd": ["grep", "http://vault.centos.org/$contentdir/$releasever/PowerTools/$basearch/os/", "/etc/yum.repos.d/CentOS-*"], "delta": "0:00:00.001606", "end": "2023-03-22 21:01:18.304115", "msg": "non-zero return code", "rc": 2, "start": "2023-03-22 21:01:18.302509", "stderr": "grep: /etc/yum.repos.d/CentOS-*: No such file or directory", "stderr_lines": ["grep: /etc/yum.repos.d/CentOS-*: No such file or directory"], "stdout": "", "stdout_lines": []}
+...ignoring
+
+TASK [vector_role : Prepare Centos] ********************************************
+skipping: [ubuntu]
+changed: [centos]
+
+TASK [vector_role : Download Vector for Centos] ********************************
+skipping: [ubuntu]
+changed: [centos]
+
+TASK [vector_role : Install Vector Centos] *************************************
+skipping: [ubuntu]
+changed: [centos]
+
+TASK [vector_role : Download Vector Ubuntu] ************************************
+skipping: [centos]
+changed: [ubuntu]
+
+TASK [vector_role : Install Vector Ubuntu] *************************************
+skipping: [centos]
+changed: [ubuntu]
+
+PLAY RECAP *********************************************************************
+centos                     : ok=5    changed=4    unreachable=0    failed=0    skipped=2    rescued=0    ignored=1   
+ubuntu                     : ok=3    changed=2    unreachable=0    failed=0    skipped=4    rescued=0    ignored=0
+
+INFO     Running default > idempotence
+
+PLAY [Converge] ****************************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [centos]
+ok: [ubuntu]
+
+TASK [Include vector_role] *****************************************************
+
+TASK [vector_role : Check need prepare Centos] *********************************
+skipping: [ubuntu]
+fatal: [centos]: FAILED! => {"changed": true, "cmd": ["grep", "http://vault.centos.org/$contentdir/$releasever/PowerTools/$basearch/os/", "/etc/yum.repos.d/CentOS-*"], "delta": "0:00:00.001574", "end": "2023-03-22 21:02:13.902665", "msg": "non-zero return code", "rc": 2, "start": "2023-03-22 21:02:13.901091", "stderr": "grep: /etc/yum.repos.d/CentOS-*: No such file or directory", "stderr_lines": ["grep: /etc/yum.repos.d/CentOS-*: No such file or directory"], "stdout": "", "stdout_lines": []}
+...ignoring
+
+TASK [vector_role : Prepare Centos] ********************************************
+skipping: [ubuntu]
+changed: [centos]
+
+TASK [vector_role : Download Vector for Centos] ********************************
+skipping: [ubuntu]
+ok: [centos]
+
+TASK [vector_role : Install Vector Centos] *************************************
+skipping: [ubuntu]
+ok: [centos]
+
+TASK [vector_role : Download Vector Ubuntu] ************************************
+skipping: [centos]
+ok: [ubuntu]
+
+TASK [vector_role : Install Vector Ubuntu] *************************************
+skipping: [centos]
+changed: [ubuntu]
+
+PLAY RECAP *********************************************************************
+centos                     : ok=5    changed=2    unreachable=0    failed=0    skipped=2    rescued=0    ignored=1   
+ubuntu                     : ok=3    changed=1    unreachable=0    failed=0    skipped=4    rescued=0    ignored=0
+
+CRITICAL Idempotence test failed because of the following tasks:
+*  => vector_role : Prepare Centos
+*  => vector_role : Install Vector Ubuntu
+WARNING  An error occurred during the test sequence action: 'idempotence'. Cleaning up.
+INFO     Running default > cleanup
+WARNING  Skipping, cleanup playbook not configured.
+INFO     Running default > destroy
+
+PLAY [Destroy] *****************************************************************
+
+TASK [Destroy molecule instance(s)] ********************************************
+changed: [localhost] => (item={'image': 'docker.io/pycontribs/centos:8', 'name': 'centos', 'pre_build_image': True})
+changed: [localhost] => (item={'image': 'docker.io/pycontribs/ubuntu:latest', 'name': 'ubuntu', 'pre_build_image': True})
+
+TASK [Wait for instance(s) deletion to complete] *******************************
+FAILED - RETRYING: Wait for instance(s) deletion to complete (300 retries left).
+FAILED - RETRYING: Wait for instance(s) deletion to complete (299 retries left).
+FAILED - RETRYING: Wait for instance(s) deletion to complete (298 retries left).
+changed: [localhost] => (item={'started': 1, 'finished': 0, 'ansible_job_id': '6680371794.49161', 'results_file': '/home/slava/.ansible_async/6680371794.49161', 'changed': True, 'failed': False, 'item': {'image': 'docker.io/pycontribs/centos:8', 'name': 'centos', 'pre_build_image': True}, 'ansible_loop_var': 'item'})
+changed: [localhost] => (item={'started': 1, 'finished': 0, 'ansible_job_id': '939783091107.49189', 'results_file': '/home/slava/.ansible_async/939783091107.49189', 'changed': True, 'failed': False, 'item': {'image': 'docker.io/pycontribs/ubuntu:latest', 'name': 'ubuntu', 'pre_build_image': True}, 'ansible_loop_var': 'item'})
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=2    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+
+INFO     Pruning extra files from scenario ephemeral directory
+ERROR: InvocationError for command /home/slava/Documents/DevOpsTask/src/task8_Ansible/Task_5_testing_roles/vector_role/.tox/py37-ansible30/bin/molecule test -s default --destroy always (exited with code 1)
+____________________________________________________________________________________ summary ____________________________________________________________________________________
+ERROR:   py37-ansible210: commands failed
+ERROR:   py37-ansible30: commands failed
+```
 
 </details>
 
