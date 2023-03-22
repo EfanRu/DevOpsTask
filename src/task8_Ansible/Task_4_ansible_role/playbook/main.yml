@@ -18,7 +18,7 @@
 - hosts: vector
   remote_user: slava
   roles:
-    - vector-role
+    - vector_role
 - hosts: clickhouse
   remote_user: slava
   vars:
