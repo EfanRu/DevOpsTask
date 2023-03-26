@@ -1,4 +1,5 @@
-# Домашнее задание к занятию 7 «Жизненный цикл ПО»
+# Домашнее задание к занятию 7 «Жизненный ци
+кл ПО»
 
 ## Подготовка к выполнению
 
@@ -6,8 +7,7 @@
    Получить бесплатную версию [Jira](https://www.atlassian.com/ru/software/jira/free).
 
 ### Решение 1
-
-![Attlasian canceled in Russia.png](Attlasian%20canceled%20in%20Russia.png)
+![Attlasian_canceled_in_Russia.png](data%2FAttlasian_canceled_in_Russia.png)
    Так как jira недоступна в России, то не будем её использовать, а поищем аналог.
    Возьмем вместо неё Yandex Tracker.
 
@@ -21,10 +21,10 @@
    Создать доски Kanban и Scrum.
 
 ### Решение 3
+![Kanban_create.png](data%2FKanban_create.png)
 
-![Kanban create.png](Kanban%20create.png)
+![Scram_create.png](data%2FScram_create.png)
 
-![Scram create.png](Scram%20create.png)
 
 ## Основная часть
    Так как в Yandex Tracker нет некоторых статусов, то пришлось их добавить
@@ -33,34 +33,34 @@
     Создайте задачу с типом bug, попытайтесь провести его по всему workflow до Done.
 
 ### Решение 1
-![Workflow create.png](Workflow%20create.png)
+![Workflow_create.png](data%2FWorkflow_create.png)
 
 ### Задание 2
     Создайте задачу с типом epic, к ней привяжите несколько задач с типом task, проведите их по всему workflow до Done. 
 
 ### Решение 2
-![Epic and tasks.png](Epic%20and%20tasks.png)
+![Epic_and_tasks.png](data%2FEpic_and_tasks.png)
 
 ### Задание 3
     При проведении обеих задач по статусам используйте kanban.
 
 ### Решение 3
    Своевременно.
-![Kanban history.png](data/Kanban history.png)
-![Kanban 2 task.png](Kanban%202%20task.png)
+![Kanban history.png](data/Kanban_history.png)
+![Kanban_2_task.png](data%2FKanban_2_task.png)
 
 ### Задание 4
     Верните задачи в статус Open
 
 ### Решение 4
-![Reopen tasks.png](Reopen%20tasks.png)
+![Reopen_tasks.png](data%2FReopen_tasks.png)
 
 ### Задание 5
    Перейдите в Scrum, запланируйте новый спринт, состоящий из задач эпика и одного бага, стартуйте спринт, проведите задачи до состояния Closed. Закройте спринт.
     
 ### Решение 5
    Баг закрыл, но спринт закрыть раньше времени нельзя, он сам закроется.
-![Close scram bug.png](Close%20scram%20bug.png)
+![Close_scram_bug.png](data%2FClose_scram_bug.png)
 
 ### Задание 6
     Если всё отработалось в рамках ожидания — выгрузите схемы workflow для импорта в XML. Файлы с workflow приложите к решению задания.
