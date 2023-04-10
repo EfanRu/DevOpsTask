@@ -1,0 +1,18 @@
+pipeline {
+    agent {
+        label 'agent'
+    }
+
+    stages {
+        stage('Get download role from git') {
+            steps {
+                git branch: 'main', credentialsId: '5407fd69-a46d-4c20-950b-5091d3e01a19', url: 'https://github.com/EfanRu/vector-role'
+            }
+        }
+	stage('Run molecule') {
+            steps {
+                sh 'python3 -m molecule test'
+            }
+        }
+    }
+}
