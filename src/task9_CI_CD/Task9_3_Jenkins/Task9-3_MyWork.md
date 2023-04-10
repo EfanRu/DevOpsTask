@@ -155,13 +155,14 @@ jenkins-master-01          : ok=10   changed=1    unreachable=0    failed=0    s
     Создать Multibranch Pipeline на запуск Jenkinsfile из репозитория.
 
 ### Решение 4
-
+    Добавил файл Jenkinsfile в репозиторий и вычитываю из него
+![Multibranch pipeline.png](Screenshoots%2FMultibranch%20pipeline.png)
 
 ### Задание 5
     Создать Scripted Pipeline, наполнить его скриптом из pipeline.
 
 ### Решение 5
-
+![Scripted.png](Screenshoots%2FScripted.png)
 
 ### Задание 6
     Внести необходимые изменения, чтобы Pipeline запускал ansible-playbook без флагов --check --diff, если не установлен 
@@ -169,16 +170,24 @@ jenkins-master-01          : ok=10   changed=1    unreachable=0    failed=0    s
     с флагами --check --diff.
 
 ### Решение 6
-
+    Сделано. Параметр добавлен в pipe и выставляется при запуске сборки.
+[ScriptedJenkinsfile](pipeline%2FScriptedJenkinsfile)
+![Scripted with param.png](Screenshoots%2FScripted%20with%20param.png)
 
 ### Задание 7
     Проверить работоспособность, исправить ошибки, исправленный Pipeline вложить в репозиторий в файл ScriptedJenkinsfile.
 
 ### Решение 7
-    
+    Все рпоходит.
+![Scripted with param success.png](Screenshoots%2FScripted%20with%20param%20success.png)
 
 ### Задание 8
     Отправить ссылку на репозиторий с ролью и Declarative Pipeline и Scripted Pipeline.
+
+### Решение 8
+[Declarative Pipeline](pipeline%2FJenkinsfile)
+[Scripted Pipeline](pipeline%2FScriptedJenkinsfile)
+[Repo with my role](https://github.com/EfanRu/vector-role)
 
 ## Необязательная часть
 
