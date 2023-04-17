@@ -1,0 +1,24 @@
+stages:          # List of stages for jobs, and their order of execution
+  - build
+  - deploy
+
+image: docker:20.10.5
+
+services:
+    - docker:20.10.5-dind
+
+builder:
+  stage: build
+  script:
+    - docker build -t my_docker_build:latest .
+  except:
+      - main
+
+deployer:
+  stage: deploy
+  script:
+    - docker build -t $CI_REPOSITORY/slava/netology/python-api:latest .
+    - docker login -u $CI_REPOSITORY_USER -p $CI_REPOSITORY_PASSWORD $CI_REPOSITORY
+    - docker push $CI_REPOSITORY/slava/netology/python-api:latest
+  only:
+    - main
