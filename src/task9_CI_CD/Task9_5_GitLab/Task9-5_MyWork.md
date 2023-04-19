@@ -164,8 +164,7 @@ flask_jsonpify
 
 ### Решение 3
 ![Issues_MR.png](Screenshots%2FIssues_MR.png)
-    Почему-то локальный запуск работает корректно, но через раннер, который я установил на своем компе ошибка.
-![Issue_pipe.png](Screenshots%2FIssue_pipe.png)
+![Succes_deploy.png](Screenshots%2FSucces_deploy.png)
 
 ## Tester
     Разработчики выполнили новый Issue, необходимо проверить валидность изменений:
@@ -192,17 +191,39 @@ flask_jsonpify
         Dockerfile;
 [Dockerfile](Dockerfile)
         лог успешного выполнения пайплайна;
-    Успешно получить pipeline не получилось((
+    Успешно получить pipeline получилось.
+![Succes_deploy.png](Screenshots%2FSucces_deploy.png)
 ```text
-      Checking out 74b7264b as detached HEAD (ref is 1-change-get-rest-api-get_info)...
-
+Running with gitlab-runner 15.10.1 (dcfb4b66)
+  on gitlab-runner-54f59f4d44-6gmcq myYRn9Fr, system ID: r_gT0elTJctF4r
+Preparing the "kubernetes" executor 00:00
+Using Kubernetes namespace: default
+Using Kubernetes executor with image gcr.io/cloud-builders/kubectl:latest ...
+Using attach strategy to execute scripts...
+Preparing environment 00:04
+Waiting for pod default/runner-myyrn9fr-project-2-concurrent-0nrnln to be running, status is Pending
+Running on runner-myyrn9fr-project-2-concurrent-0nrnln via gitlab-runner-54f59f4d44-6gmcq...
+Getting source from Git repository 00:01
+Fetching changes with git depth set to 20...
+Initialized empty Git repository in /builds/slava/netology/.git/
+Created fresh repository.
+Checking out 59de0a39 as detached HEAD (ref is main)...
 Skipping Git submodules setup
-Executing "step_script" stage of the job script
-Using docker image sha256:1588477122de4fdfe9fcb9ddeeee6ac6b93e9e05a65c68a6e22add0a98b8e0fe for docker:20.10.5 with digest docker@sha256:7ed427295687586039ff3433bb9b4419c5cf1e6294025dadf7641126665a78f5 ...
-$ docker build -t my_docker_build:latest .
-error during connect: Post http://docker:2375/v1.24/build?buildargs=%7B%7D&cachefrom=%5B%5D&cgroupparent=&cpuperiod=0&cpuquota=0&cpusetcpus=&cpusetmems=&cpushares=0&dockerfile=Dockerfile&labels=%7B%7D&memory=0&memswap=0&networkmode=default&rm=1&shmsize=0&t=my_docker_build%3Alatest&target=&ulimits=null&version=1: dial tcp: lookup docker on 192.168.1.1:53: no such host
-Cleaning up project directory and file based variables
-ERROR: Job failed: exit code 1
+Executing "step_script" stage of the job script 00:01
+$ kubectl config set-cluster k8s --server="$KUBE_URL" --insecure-skip-tls-verify=true
+Cluster "k8s" set.
+$ kubectl config set-credentials admin --token="$KUBE_TOKEN"
+User "admin" set.
+$ kubectl config set-context default --cluster=k8s --user=admin
+Context "default" created.
+$ kubectl config use-context default
+Switched to context "default".
+$ sed -i "s/__VERSION__/gitlab-$CI_COMMIT_SHORT_SHA/" k8s.yaml
+$ kubectl apply -f k8s.yaml
+namespace/python-api unchanged
+deployment.apps/python-api-deployment unchanged
+Cleaning up project directory and file based variables 00:01
+Job succeeded
 ```
         решённый Issue.
 ![Close_issue.png](Screenshots%2FClose_issue.png)
