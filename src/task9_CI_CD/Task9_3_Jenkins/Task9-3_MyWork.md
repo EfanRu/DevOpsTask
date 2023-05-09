@@ -178,7 +178,7 @@ jenkins-master-01          : ok=10   changed=1    unreachable=0    failed=0    s
     Проверить работоспособность, исправить ошибки, исправленный Pipeline вложить в репозиторий в файл ScriptedJenkinsfile.
 
 ### Решение 7
-    Все рпоходит.
+    Все проходит.
 ![Scripted with param success.png](Screenshoots%2FScripted%20with%20param%20success.png)
 
 ### Задание 8
