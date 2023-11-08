@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: front-nginx-multitool-deployment
+  labels:
+    app: front-nginx-multitool
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app:  front-nginx-multitool
+  template:
+    metadata:
+      labels:
+        app:  front-nginx-multitool
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+      - name: multitool
+        image: wbitt/network-multitool
+        env:
+          - name: HTTP_PORT
+            value:  "8080"
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-multitool-deployment
+  labels:
+    app: backend-multitool
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app:  backend-multitool
+  template:
+    metadata:
+      labels:
+        app:  backend-multitool
+    spec:
+      containers:
+      - name: multitool
+        image: wbitt/network-multitool
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: front-svc
+spec:
+  selector:
+    app: front-nginx-multitool
+  ports:
+    - name: front-web
+      port: 80
+    - name: front-api
+      port: 8080
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: back-svc
+spec:
+  selector:
+    app: backend-multitool
+  ports:
+    - name: backend-api
+      port: 80
