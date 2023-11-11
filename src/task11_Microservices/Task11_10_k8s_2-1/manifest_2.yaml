@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: multitool-daemonset
+  labels:
+    app: multitool-daemonset
+spec:
+  selector:
+    matchLabels:
+      app:  multitool
+  template:
+    metadata:
+      labels:
+        app:  multitool
+    spec:
+      tolerations:
+        - key: node-role.kubernetes.io/control-plane
+          operator: Exists
+          effect: NoSchedule
+        - key: node-role.kubernetes.io/master
+          operator: Exists
+          effect: NoSchedule
+      containers:
+      - name: multitool
+        image: wbitt/network-multitool
+        volumeMounts:
+          - name: vol
+            mountPath: /data
+      volumes:
+      - name: vol
+        hostPath:
+          path: /var/log
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: multitool-svc
+spec:
+  selector:
+    app: multitool
+  ports:
+    - name: web
+      port: 80
