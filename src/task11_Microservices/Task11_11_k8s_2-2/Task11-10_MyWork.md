@@ -161,6 +161,73 @@ Learning again!
 
 ------
 
+### Решение 2
+
+Создать Deployment приложения, которое может хранить файлы на NFS с динамическим созданием PV.
+
+1. Включить и настроить NFS-сервер на MicroK8S.
+
+```commandline
+slava@microk8s:~$ microk8s enable community
+slava@microk8s:~$ microk8s enable nfs
+...
+example
+    ---
+    kind: PersistentVolumeClaim
+    apiVersion: v1
+    metadata:
+      name: test-dynamic-volume-claim
+    spec:
+      storageClassName: "nfs"
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 100Mi
+NFS Server Provisioner is installed
+
+WARNING: Install "nfs-common" package on all MicroK8S nodes to allow Pods with NFS mounts to start: sudo apt update && sudo apt install -y nfs-common
+WARNING: NFS Server Provisioner servers by default hostPath storage from a single Node.
+slava@microk8s:~$ sudo apt update && sudo apt install -y nfs-common
+
+```
+
+2. Создать Deployment приложения состоящего из multitool, и подключить к нему PV, созданный автоматически на сервере NFS.
+[manifest_2.yaml](manifest_2.yaml)
+
+3. Продемонстрировать возможность чтения и записи файла изнутри пода. 
+
+```commandline
+slava@slava-FLAPTOP-r:~$ kubectl apply -f /home/slava/Documents/DevOpsTask/src/task11_Microservices/Task11_11_k8s_2-2/manifest_2.yaml
+deployment.apps/busybox-multitool-deployment created
+service/busybox-multitool-svc unchanged
+persistentvolume/nfs-volume created
+persistentvolumeclaim/pvc-vol created
+slava@slava-FLAPTOP-r:~$ kubectl get pv
+NAME                            CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS        CLAIM                                                  STORAGECLASS   REASON   AGE
+data-nfs-server-provisioner-0   1Gi        RWO            Retain           Terminating   nfs-server-provisioner/data-nfs-server-provisioner-0                           16m
+nfs-volume                      100Mi      RWO            Delete           Bound         default/pvc-vol                                        nfs                     6s
+slava@slava-FLAPTOP-r:~$ kubectl get pvc
+NAME      STATUS   VOLUME       CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+pvc-vol   Bound    nfs-volume   100Mi      RWO            nfs            17s
+slava@slava-FLAPTOP-r:~$ kubectl get pods
+NAME                                            READY   STATUS    RESTARTS      AGE
+busybox-multitool-deployment-779b658868-z7tw6   2/2     Running   0             22s
+slava@slava-FLAPTOP-r:~$ kubectl exec pods/busybox-multitool-deployment-779b658868-z7tw6 multitool -it -- sh
+Defaulted container "multitool" out of: multitool, busybox
+/ # cat ./input/Way_to_devOps.txt 
+Learning again!
+Learning again!
+Learning again!
+...
+
+```
+
+4. Предоставить манифесты, а также скриншоты или вывод необходимых команд.
+[manifest_2.yaml](manifest_2.yaml)
+
+------
+
 ### Правила приёма работы
 
 1. Домашняя работа оформляется в своём Git-репозитории в файле README.md. Выполненное задание пришлите ссылкой на .md-файл в вашем репозитории.

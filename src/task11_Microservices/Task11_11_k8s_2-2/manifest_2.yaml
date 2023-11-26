@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: busybox-multitool-deployment
+  labels:
+    app: busybox-multitool-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app:  busybox-multitool
+  template:
+    metadata:
+      labels:
+        app:  busybox-multitool
+    spec:
+      containers:
+      - name: multitool
+        image: wbitt/network-multitool
+        volumeMounts:
+          - name: vol
+            mountPath: /input
+      - name: busybox
+        image: busybox
+        command: ['sh', '-c', 'while true; do echo "Learning again!" >> /output/Way_to_devOps.txt; sleep 5; done']
+        volumeMounts:
+          - name: vol
+            mountPath: /output
+      volumes:
+      - name: vol
+        persistentVolumeClaim:
+          claimName: pvc-vol
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: busybox-multitool-svc
+spec:
+  selector:
+    app: busybox-multitool
+  ports:
+    - name: web
+      port: 80
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-volume
+spec:
+  storageClassName: "nfs"
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 100Mi
+  persistentVolumeReclaimPolicy: Delete
+  hostPath:
+    path: /data/pv
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-vol
+spec:
+  storageClassName: "nfs"
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
