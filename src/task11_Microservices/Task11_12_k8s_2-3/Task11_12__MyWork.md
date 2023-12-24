@@ -113,6 +113,16 @@ Handling connection for 8181
 1. Создать Deployment приложения, состоящего из Nginx.
 2. Создать собственную веб-страницу и подключить её как ConfigMap к приложению.
 3. Выпустить самоподписной сертификат SSL. Создать Secret для использования сертификата.
+
+```commandline
+openssl req -x509 \
+            -sha256 -days 356 \
+            -nodes \
+            -newkey rsa:2048 \
+            -subj "/CN=demo.mlopshub.com/C=US/L=San Fransisco" \
+            -keyout rootCA.key -out rootCA.crt 
+```
+
 4. Создать Ingress и необходимый Service, подключить к нему SSL в вид. Продемонстировать доступ к приложению по HTTPS.
 5. Предоставить манифесты, а также скриншоты или вывод необходимых команд.
 [manifest_3.yaml](manifest_3.yaml)
@@ -123,11 +133,18 @@ service/busybox-multitool-svc created
 configmap/my-configmap unchanged
 secret/my-app-secret-tls created
 ingress.networking.k8s.io/http-ingress configured
+slava@slava-FLAPTOP-r:~$ kubectl port-forward pods/nginx-multitool-deployment-6f68cdfc54-x6pmn 30080:443
+Forwarding from 127.0.0.1:30080 -> 443
+Forwarding from [::1]:30080 -> 443
+Handling connection for 30080
+
 ```
 
-    Получилось подключиться по адресу https://158.160.108.248/nginx , но не получилось решить проблему с отображением nginx :( Так как домашку продлевал 2 раза, то увы пока сдам так.
-
-![https_nginx.png](ScreenShoots%2Fhttps_nginx.png)
+    Получилось подключиться через https к multitool, а к моему nginx не получается. Пробовал менять nginx.conf в контейнере 
+    руками и рестартовал nginx, так же пробовал сетить файл конфигурации nginx из multitool в nginx (акомменченные строки), 
+    но ничего не получилось :( Технически настроить ingress и подключиться по https получилось. 
+![https_connection_multitool.png](ScreenShoots%2Fhttps_connection_multitool.png)
+![https_connection_nginx.png](ScreenShoots%2Fhttps_connection_nginx.png)
 
 
 ------

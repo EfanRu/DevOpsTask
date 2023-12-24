@@ -19,11 +19,13 @@ spec:
         image: nginx:1.14.2
         ports:
           - containerPort: 8080
-            name: web-nginx
+            name: web1
             protocol: TCP
         volumeMounts:
           - name: nginx-index
             mountPath: /usr/share/nginx/html/
+#          - name: nginx-conf
+#            mountPath: /etc/nginx/
       - name: multitool
         image: wbitt/network-multitool
         env:
@@ -32,14 +34,22 @@ spec:
               configMapKeyRef:
                 name: my-configmap
                 key: HTTP_PORT
+          - name: HTTPS_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: my-configmap
+                key: HTTPS_PORT
         ports:
           - containerPort: 8081
-            name: web-multitool
+            name: web2
             protocol: TCP
       volumes:
         - name: nginx-index
           configMap:
             name: my-configmap
+        - name: nginx-conf
+          configMap:
+            name: my-nginx-config
         - name: secret-volume
           secret:
             secretName: my-app-secret-tls
@@ -53,11 +63,11 @@ metadata:
   name: busybox-multitool-svc
 spec:
   selector:
-    app: busybox-multitool
+    app: nginx-multitool
   ports:
-    - name: web-nginx
+    - name: web1
       port: 443
-    - name: web-multitool
+    - name: web2
       port: 80
 
 ---
@@ -68,6 +78,7 @@ metadata:
   name: my-configmap
 data:
   HTTP_PORT: "81"
+  HTTPS_PORT: "444"
   index.html: |
     <!DOCTYPE html>
     <html>
@@ -98,107 +109,123 @@ data:
 ---
 
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-nginx-config
+data:
+  nginx.conf: |
+    user  nginx;
+    worker_processes  1;
+    
+    pid        /var/run/nginx.pid;
+    stderr instead of a log file.
+    error_log  /dev/stderr warn;
+    
+    events {
+        worker_connections  32;
+    }
+    
+    
+    http {
+        include       /etc/nginx/mime.types;
+        default_type  application/octet-stream;
+    
+        log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                          '$status $body_bytes_sent "$http_referer" '
+                          '"$http_user_agent" "$http_x_forwarded_for"';
+    
+        access_log  /dev/stdout  main;
+    
+        sendfile        on;
+    
+        keepalive_timeout  65;
+    
+        server {
+            listen       80;
+            server_name  localhost;
+    
+            location / {
+                root   /usr/share/nginx/html;
+                index  index.html index.htm;
+            }
+        }
+    
+        server {
+            listen       443    ssl;
+            server_name  localhost;
+    
+            location / {
+                root   /usr/share/nginx/html;
+                index  index.html index.htm;
+            }
+    
+            ssl_certificate /certs/server.crt;
+            ssl_certificate_key /certs/server.key;
+        }
+    }
+
+
+---
+
+apiVersion: v1
 kind: Secret
 metadata:
   name: my-app-secret-tls
 data:
   tls.crt: |
-    LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUZ3ekNDQTZ1Z0F3SUJBZ0lVTEtWengwa3JR
-    Tk9uVGR2NVJrZldyd0tNVjNnd0RRWUpLb1pJaHZjTkFRRUwKQlFBd2NURUxNQWtHQTFVRUJoTUNV
-    bFV4Q3pBSkJnTlZCQWdNQWsxNU1Rd3dDZ1lEVlFRSERBTk5jMk14Q3pBSgpCZ05WQkFvTUFrMTVN
-    UXN3Q1FZRFZRUUxEQUpOZVRFT01Bd0dBMVVFQXd3RlUyeGhkbUV4SFRBYkJna3Foa2lHCjl3MEJD
-    UUVXRG5Oc1lYWmhRSE5zWVhaaExuSjFNQjRYRFRJek1USXhOakU1TkRNeU4xb1hEVE16TVRJeE16
-    RTUKTkRNeU4xb3djVEVMTUFrR0ExVUVCaE1DVWxVeEN6QUpCZ05WQkFnTUFrMTVNUXd3Q2dZRFZR
-    UUhEQU5OYzJNeApDekFKQmdOVkJBb01BazE1TVFzd0NRWURWUVFMREFKTmVURU9NQXdHQTFVRUF3
-    d0ZVMnhoZG1FeEhUQWJCZ2txCmhraUc5dzBCQ1FFV0RuTnNZWFpoUUhOc1lYWmhMbkoxTUlJQ0lq
-    QU5CZ2txaGtpRzl3MEJBUUVGQUFPQ0FnOEEKTUlJQ0NnS0NBZ0VBcUw2d2loTkpuVXY0aXJUS0tj
-    cjFIYXB3QURnYXFNU0VndU92aWVQSmxXVGxFR1I3SnpRegpjRFVTdXhwK1lCTndubmZMVFl5WUJW
-    SENjNUNJc01CVVdCL1dmcWdUZFZzdlBFTmJGeE10a1lSVTFIV3BGRW9LCmpIYlRieVlycEw2QU5z
-    ZVdqZm04SmduZmFyWDQ5Vm9rc3VGbGp4a3F3RnYzQUdBcnBoa1o1WGV5ZlZUNkp3UjMKd215Qkc2
-    WUtyV3U5YzhxUi8yL0YyYk1zQjNlcURBUEppSHVRYnoyMXQ5YzFjVnhYZkt6RjFSeWZLbEpUT1Ur
-    dAowLzJ2MmFLUG5ManpoelRBVmQ4SVJCVkVjckhROTRWZnRHS25kelVZYjkyellMYlJIZEk0TjE4
-    QjZxNmxSVmE4Ck1xbHNIN3hocGpvU2VqNjRMWDB4SXJmSmJzVjVPcFh5WkhHemR5bllrTFA1OFZY
-    RjJpamNCbTBlRmllbjhtNlQKSXNlN3UvbGNyS05tYUpxNWNRbjBubVJxSGlpWWNDZ1g2RTMycWZJ
-    ZHpiZkxkMTZoTVRheHgxNXc5V1hJMDdBUQpVWS90am90STQ5VkdJK0dxOVRNbTBicFdUbFdONXRk
-    cWFOZ3hjeEh5SmprckhHZlAvT1V1Y0sxNmp4U2tiZnl2CnJScHVOMnZzK2tFSVU3NGxpdzFUdko5
-    SEhYcCs1Z0ZIcHJUQVY0T0h3di9XcVRFZ2dUc0R3cldUeEFxN3VGNm4KaFV5aTFCajg0S3Iza1RU
-    cmpmMjV4b2xoZE5YMTlmRGZEemw5ZEdtOEFxVFJvaU9sVWxQUnc1eDdyVDRzdkNXUwo0K2xndmNp
-    dVFIaEd6aXZiKzIrK0wzR3AwMjYvbUQ4QTZwMkdsak8yaElYNEkzL3NOSENPSzhjQ0F3RUFBYU5U
-    Ck1GRXdIUVlEVlIwT0JCWUVGUEd1Q0tFM0RTai9ycFVRVkkwbUZnQlc5YUdBTUI4R0ExVWRJd1FZ
-    TUJhQUZQR3UKQ0tFM0RTai9ycFVRVkkwbUZnQlc5YUdBTUE4R0ExVWRFd0VCL3dRRk1BTUJBZjh3
-    RFFZSktvWklodmNOQVFFTApCUUFEZ2dJQkFHY2dSM21vTWRJUkVITlRQdlVhNW9DS25tUm5UVXox
-    cCszRGpaUFNmSVhSR1AwVlJPLzRpMlU2CnlNSEhQbW9jUTZISjdNMWx2ckJvUW93UTVwbVdkMXZ0
-    TjVMUEJ1Q05TM2NnVnB1SkUxM09JUzV0UEtURHJ3dWoKVjJFTFdtdUdheDJ6ZytMMDIyaWt5L0lL
-    NjAvT1A2YlVQdVpIQ2pSblc4OUtSK01xUjl5em03R0trWjJ2K2JNdApjNjFRbHUrYzJLck96bWw3
-    NUE5Y203dzJEN2JiWnNUZ2Y3YWRwN0FpWGh3VzZKdlI2WGF5bS9MT05pb3FTRlcwCkJhYXhpY2hi
-    NUVaM2NxY0xxdXBGNFQ0M2RrZ1d4emJPeHNXVmNNSWRqenpqczdYekxSSHplRXhlaTBLNThkTzkK
-    MEt2OHpmYXN3dXZjcjRnUjdOajI1QXhsYmlpcUMrS2h3T0pCQlVERit1WmFnVS8vUGNNK1VYTTJ0
-    YW1MZmxnRworeis5UFgvS2RWNG1za3NORC9MUEY4d0hQQ2VMZXY5MnBQaUhneVBQTWxYZGxEc0Fy
-    ZzYvWWhJeVhTbjlZVys3CnJGdkltOFBYcEMzQk1qVUFaMFFrZFV6SStlZXJJOUF4VmQ3aW0wWXFO
-    RnBNR2s3L3hyclByd1VHVThIZWxRVTYKTkdwLzc3RDNXOEZTYUlSdXlnR1RYUjB4V0thRjJLbjhm
-    T0YxT2J6YUpyTS95dXp6UlhXUTl2TVJLYWUvWmk5Ugo0NUZSaFNRNm5Pa21TeldYUGtVU290Ny9U
-    U2hWTmpvZHJZRko1UHRIZEdsWDBPb3kreVVqdnBrQSs3SVJtdUVVCis5YlB0WXNpdWJaV3R2Ri9B
-    ZU1qbThtZThXcXI4eUljUlBYQkpYbEdzQnJhZnZNaGs1L2YKLS0tLS1FTkQgQ0VSVElGSUNBVEUt
-    LS0tLQo=
+    LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURZekNDQWt1Z0F3SUJBZ0lVUHVTbkN4REVq
+    NDZDandXTGl2Vm5JMEJLZzVFd0RRWUpLb1pJaHZjTkFRRUwKQlFBd1FURWFNQmdHQTFVRUF3d1Ja
+    R1Z0Ynk1dGJHOXdjMmgxWWk1amIyMHhDekFKQmdOVkJBWVRBbFZUTVJZdwpGQVlEVlFRSERBMVRZ
+    VzRnUm5KaGJuTnBjMk52TUI0WERUSXpNVEl5TWpJd01qZ3pORm9YRFRJME1USXhNakl3Ck1qZ3pO
+    Rm93UVRFYU1CZ0dBMVVFQXd3UlpHVnRieTV0Ykc5d2MyaDFZaTVqYjIweEN6QUpCZ05WQkFZVEFs
+    VlQKTVJZd0ZBWURWUVFIREExVFlXNGdSbkpoYm5OcGMyTnZNSUlCSWpBTkJna3Foa2lHOXcwQkFR
+    RUZBQU9DQVE4QQpNSUlCQ2dLQ0FRRUE2cWF6Wk4xMTh6Q1lLdjdacks1N1QwYWtvK1NmajYvV1VW
+    NVloK1oyT25jRHhIZW1uSUFGCkpxSUR3azRMYXhXa3NrU0ZlRDI2Q0ZsME9BOFVMTmdyMmZ1SEZM
+    OHk3Q3lNTWh6T3JaSkVwYk4rL1BVV3JEamoKRkYxeU1WTml3TW1GUnh2Ny9HbzlYeTloUUNEZFlY
+    a21nblNTYVViN3h5S1dMOGNaUFpPWWowQWZLR1hSbTdHMQp0Y0pMRE4rZjlpYUFUVlA2RDdnYmJH
+    cVo0T0pmbGNaUkQxRFRteTZQR0dSYmdEbUgwdmtYNzlIK0lkM1d2M1NDCnYvSm5BVjhJdDNTMHBm
+    SldBSDl4bncrbjJhajJ2WUNrTHJMTDJ3QjhDNjVEQzQrbXFySVM0YXUydEkxQzlnN20KcXZWbGJz
+    NkZ2ejNPRU1IOG9wTWk1YjQyNHlwMU44MzdEUUlEQVFBQm8xTXdVVEFkQmdOVkhRNEVGZ1FVZW1r
+    YQp1bVZEK3hScUdWaUM0WkgzYzVIejdZa3dId1lEVlIwakJCZ3dGb0FVZW1rYXVtVkQreFJxR1Zp
+    QzRaSDNjNUh6CjdZa3dEd1lEVlIwVEFRSC9CQVV3QXdFQi96QU5CZ2txaGtpRzl3MEJBUXNGQUFP
+    Q0FRRUFtaHhmM2lJa2hOLzQKQ25GNGpVOEdML0xxOVBlL1Ayak5nNmRVZ2dETXN0bnlQZTJFeVpv
+    RGs1UkhiZVBIR1RHYVlKdWllanBhNXRIMwpZa0NFWW9rdUxGa1VhdlQ5OEUvaVlESWd6aFdrOFN2
+    cWI4YlVTcERkNXRndkJDZ0d4eTdrMXFwdTVkcUVmQUdZCkJlME1RMzdCL1BKNHpMMHByU0ZaM09K
+    M3Y1M0M5SFZ4WGRjWjVmUXAwdTh5TEZjNitzbmtTWVRsZndvVjhIYkkKdSsvTEtkTjZFVUdWVUk2
+    RG5DU2dFN3Z1ZjcwV2VDMTJ0aE1KNElmZytvZi91V2w2ekpBNmpiMkNLTTIrYVUySApNR1FLQ3dp
+    Ny8vcmV4ZEJiak4rRDl3Z2NabFNQZVhieEFJUVVXWGtleDUwYW50RTFOTURzVTgxWDhkWHY2bDYw
+    CmJMOHB5VFhVdVE9PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
   tls.key: |
-    LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JSUpRd0lCQURBTkJna3Foa2lHOXcwQkFRRUZB
-    QVNDQ1Mwd2dna3BBZ0VBQW9JQ0FRQ292ckNLRTBtZFMvaUsKdE1vcHl2VWRxbkFBT0Jxb3hJU0M0
-    NitKNDhtVlpPVVFaSHNuTkROd05SSzdHbjVnRTNDZWQ4dE5qSmdGVWNKegprSWl3d0ZSWUg5Witx
-    Qk4xV3k4OFExc1hFeTJSaEZUVWRha1VTZ3FNZHROdkppdWt2b0EyeDVhTitid21DZDlxCnRmajFX
-    aVN5NFdXUEdTckFXL2NBWUN1bUdSbmxkN0o5VlBvbkJIZkNiSUVicGdxdGE3MXp5cEgvYjhYWnN5
-    d0gKZDZvTUE4bUllNUJ2UGJXMzF6VnhYRmQ4ck1YVkhKOHFVbE01VDYzVC9hL1pvbytjdVBPSE5N
-    QlYzd2hFRlVSeQpzZEQzaFYrMFlxZDNOUmh2M2JOZ3R0RWQwamczWHdIcXJxVkZWcnd5cVd3ZnZH
-    R21PaEo2UHJndGZURWl0OGx1CnhYazZsZkprY2JOM0tkaVFzL254VmNYYUtOd0diUjRXSjZmeWJw
-    TWl4N3U3K1Z5c28yWm9tcmx4Q2ZTZVpHb2UKS0pod0tCZm9UZmFwOGgzTnQ4dDNYcUV4TnJISFhu
-    RDFaY2pUc0JCUmorMk9pMGpqMVVZajRhcjFNeWJSdWxaTwpWWTNtMTJwbzJERnpFZkltT1NzY1o4
-    Lzg1UzV3clhxUEZLUnQvSyt0R200M2ErejZRUWhUdmlXTERWTzhuMGNkCmVuN21BVWVtdE1CWGc0
-    ZkMvOWFwTVNDQk93UEN0WlBFQ3J1NFhxZUZUS0xVR1B6Z3F2ZVJOT3VOL2JuR2lXRjAKMWZYMThO
-    OFBPWDEwYWJ3Q3BOR2lJNlZTVTlIRG5IdXRQaXk4SlpMajZXQzl5SzVBZUViT0s5djdiNzR2Y2Fu
-    VApicitZUHdEcW5ZYVdNN2FFaGZnamYrdzBjSTRyeHdJREFRQUJBb0lDQUVBTVdOK2ZvSUpXc3Bp
-    Yk5GeVdqMkRhCkx6YTJGTkJYL3QvYlllWlpra3JsQjlpbit1S1Blckt0UWxYSUlZMS84M0FDa2lU
-    MkowRmxuZ1BWS1R6RlUzNDcKWDJPbGtmVXFUZ3gybUYxeXh3b0RpMXMwNlo4czEwSW5XK3RGTnEy
-    S0xRb2R5WFJNQlBEL01GREZqeUE1UGRLegpvS09tN3NZaVllYy9tWEdxOTF4VWlXZnUyQi8xSHl1
-    cG1YdVFFMTl0bEhRZHdEcVBCeTZ4UmhYemdwU2EzMlN4Cldjb1BSeWpuUTM2cWlQNW1hWlNSRDR5
-    MXdLYnhLazViYk9LVFJDVTlRaG5nbU53L0Vsa2RKV1RQUHp5ajRBYU0KcDNta3FvalRRbUdFSW0x
-    S1BGSXYrbjlFR0xEdjBmRDh3M0JzUlRnZHRLTzNxSnFEZVNIdlZrSjRLNkprQmFNaApLWG9IQ0k2
-    V2dzMU5Db0FnTUZHWUUxN1Y2S2ZjTXdiWmxzQ0Y0VzgzSWlwSTUyVlN4cFQ0MTJoQnUwUFZQMS9Y
-    Clo4ZzlXVks1NGMxOVZCcDV6VU5UTGdUUkoySlZiaTNkWFlSdDAzb3lFMkUxTjVIMjU0MmRkd1hp
-    NElzdlVTamYKRDdodkZzL0RpdENQMnBoRGRQNDcrTDBleUVGWllsVEVsaUQ2WXM3bk5WZm42RlU2
-    UWtrc2NjM0pnOXJhcUlCTgpJOWg4bVAyRzZTSkY5cTNvUkQvT2kxUUxEc2haQXgrYW9uYkdsdVZu
-    NDdJdmZkOWRBYkVwOUxxUytOVzlVbGlICkRTTmV4UDA2Wk5SMmVUZ2dreHphN0RucVVBTzJERXZl
-    UlN3K293d0szblZYN0p3b1FwRzRHOU1vdlg3ckhUb2gKakZGZUxwSlhSK1BTM1pJcjAyWHBBb0lC
-    QVFDMkpuUGN4dnJSNmQ2SVMrb25aUkhuNDhmN2lQeE9KM2RUdzF1dwpWL1VYR1V3UDcreUJaSG94
-    WFRVdXlGRmVQQmJNYXUvYXNUYUFsY1BYU0U3K0JtVTlaYitKR2VIVE95VGxaeWZyCkxFNUNlRTkv
-    UUFzQ2lReGd4UWM5R0xyd3pBbmtnSlhNRTMzTCtQblplWFBHeE9pWmdnOUk0YzdDZUhjU2Y5ZjcK
-    Mi9yY053UW9MR1MzcS9MN1RHSU1reVQ5S2lOZ1NnVklOYkR3KzVoUTF3LzZLdHJGdWEwZWVoTGJN
-    YXQyaTFaTgppZi9wU0N6RWVYUVdLVDhZTlB0Y0lncGtXb3IzSGNwWHdDTDRIY3YwcnNmMWQwUFJ0
-    Nko1S0ZzckQ0ckFtZUVwClduSEF6U0czTlYrUHMrUExGWGQ0TDlEVlcvWXVsdEpoTnlibHRYcHRC
-    eFVPSFdVVEFvSUJBUUR0S09LbXUyM20KYVh6UkNnbHJKS0F3SzFKbzJJVFBFL3hyZTk1eEVyNUYx
-    NHhCVkgyLzVyU1lNT05UQzNtLzJtMlpUV2ZQV09tagpTUU8zNkE5NVVCT0NFVy9QdkJKWUtRYTNS
-    YTRWOWNrR2FZNmFLekxTZHZkOVdzZms1ME1PM1c5ZFVQbEhKMVp6CmtoSWxBTnVuMzJIWWVkOUdV
-    OS9QWE4ydC9zTGpuRnlQN1E0em5ZWUV1bmoxVXNYdkJVaUV0ck9tNm5Rd1lEaFMKbTU0QWVxTUxQ
-    MjNDUlFoR0wxcTg1d1VOZUNwRXlkU2RhQnpwWSt2S0xwQWNjZnpqL1lMSHZuMXVsRFZMUmRGZwpO
-    ejFNL0l0bVc1aVFMNXdzQzZ6YldiaGV1V1V4Sk44WFhhMi9tcDVXRGgvSUVwZHIzZ0lCaGpEdHlO
-    S3E3WEFSCjRDNHZuK3dtU3BqOUFvSUJBQnhia2pBdC9rQ044Mm91djI2UXFwLzZjMWp5czYwTE1l
-    V2xoWEhIejgxZno5cXYKVkplMFo5MmxrREVQV0xPZUVVS1Q1M0dabzAyVGcyRFJ6aEo0Tm15L21Y
-    a2p3V2VjVHBzMFd4K2V6elJEL01SbgoyUTcwL1N0WG9VL2V1TVBpVUN2MTVOeFhzSDcvN1EzeGZa
-    ZlZjZ3pzRmFzWUZKTnNJOFdLaDdxYlBjdm8rTW0wClY1M010RkJ4VE5aK1ZnVGYrWS8xRml0dXlI
-    Uk1CeU9XeDlML3R2MlBjYWRNQkFHQ0V4cXFpSzRick83Sm9NYVoKemZ2aFFnUm53elpOeW1aalBq
-    MUlzd2JFVCsxbTNpaml5UmlyRDdEbnNQREIycWV5akx4OWVITnl0RUQ2N3FQUwpPR1ZyOFN2ZDFM
-    S3Vad25BZm13MGFONWZzcnVTYkZQckJWa2tOR2NDZ2dFQkFMUlhudU1ETEROR2pDKzUzaWVuCmxs
-    aUsyUVA1Z2lTbUloRHFCT0VmUzZsNG02TWlTTzJnMWp2VkVVaVpOVi83RGRUQjArc014YjN4Uys2
-    UmZSTFgKSGI2TzIrT3dOSkx0djdtbU54ZGo3QllBTnZ4dFZSeE9jeXpUMTZYdFprVHJoa0FEejB1
-    WVVsbFgvb3c4OXN2VgpSbWFEWnBIb1BnMUZwUjBtMmJTVHRwK0x1SHp2a0hZUUJ1TW1xblYwSXcw
-    b2tieWdGUEtrZUsvNHZsSEc4QzBoCmNxbUVMU0tSNkFJMSt0V2ZSeVZBQlhvZExiOGN5TFRhYTZQ
-    MTJrVFZCcG8xOU5RZHg5a1Jvb0h6LzUySGZjbTgKWld0ZmlQYkZlaERqVFJ4YkJ1UTBFYUdIRHhU
-    ZzB2N0ZoczF4dGN2RTZ1bVZ6YWRFUzA3SGQ2MWdPRDdtOFlDOAp3VkVDZ2dFQkFJMGRwNUlROU1V
-    QktPZnZIS2ZCdEM1TWNmdjY3Z3RuQWhqeDlZUXBxK1ZycWhqbUZWVDZ6MDRXCkV4dk9iRmJ2SWE0
-    MkgxM0NzWWJ3c0l6UG9OSEJKd2h5Nll2aUNhczNZbEV4Z0R6S2RqQmxiOEFOMHlabWxMdkYKcFgr
-    RVNCdGRzRmdMWHhSY1RjL2FNN1c0WHY2YzErcDYrVE90eXZ1ZExrajR2S1cxWGVlbnlueDU5TFl3
-    OEZwbgplTWwwUjEyMkZKZ2ZPSWFHRHZGV29mSTFtV0hDcHBTM3NENS9aVzR5N3hUTG85em56dllV
-    UVBnNWFmRERhWm5ZCkRtdkJWZExCcnBnbVk5MFV0U2Z0bFZVMXRGa0dDSWVGcFdnTysxTUl3SkR6
-    MUtUemxuem5oOGhGZm5OK25TRlYKemErdHNBOWxaaGIzbDVYaEtOTFJRanFnWWNDK1ZCOD0KLS0t
-    LS1FTkQgUFJJVkFURSBLRVktLS0tLQo=
+    LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JSUV2QUlCQURBTkJna3Foa2lHOXcwQkFRRUZB
+    QVNDQktZd2dnU2lBZ0VBQW9JQkFRRHFwck5rM1hYek1KZ3EKL3Rtc3JudFBScVNqNUorUHI5WlJY
+    bGlINW5ZNmR3UEVkNmFjZ0FVbW9nUENUZ3RyRmFTeVJJVjRQYm9JV1hRNApEeFFzMkN2Wis0Y1V2
+    ekxzTEl3eUhNNnRra1NsczM3ODlSYXNPT01VWFhJeFUyTEF5WVZIRy92OGFqMWZMMkZBCklOMWhl
+    U2FDZEpKcFJ2dkhJcFl2eHhrOWs1aVBRQjhvWmRHYnNiVzF3a3NNMzUvMkpvQk5VL29QdUJ0c2Fw
+    bmcKNGwrVnhsRVBVTk9iTG84WVpGdUFPWWZTK1JmdjBmNGgzZGEvZElLLzhtY0JYd2kzZExTbDhs
+    WUFmM0dmRDZmWgpxUGE5Z0tRdXNzdmJBSHdMcmtNTGo2YXFzaExocTdhMGpVTDJEdWFxOVdWdXpv
+    Vy9QYzRRd2Z5aWt5TGx2amJqCktuVTN6ZnNOQWdNQkFBRUNnZ0VBSVBvTEFaeWZBQzJlNFFIK1lP
+    YUhoVmxoOTNlQWxoNnAwYmNlM1lCOXNwTTUKeUJGaHJLSlFOd0R6WXNuNWtGUFRHTXVJNzJCTFpm
+    TitZZ2Q2ZUIvc0w3OEoyWmhTUlg4d043VzFOUTcyajB2MQp4NEtCTEhSMU0wNDdwMk4yNEMyaUNa
+    K003d2tXTld1UThRUjlZRDY0c3dKRGRrQ256ekZVNW9PR1VGRlBFaWgxCm8xU01RdFFsTW9NY2U2
+    MVBuZ2MzK0FFWkMvY3ZML1V1Q291bDJHeWRSZHE3SzFoa1VFcC9wKzRkTTZya2F6ajkKMGRaOTRJ
+    ckJHbmtxb09PcDFucS9YMHFGaGRoTDhVRkY0UkdNRVFNeURPV1VaMHpQRUFBdDJtYjlJWURsL2Q5
+    Ngp6cTdZeWZkZ2VETERSUEhMcHZJbEUvRFZYYlRtQXhDanh4WUxxTzdXU1FLQmdRRHg3ajNlTjNM
+    UWRMRTRxQ0xrClpPWnh5SGFSUEhEY045WldvZDY3TkpSdlEzQ3ZpWHdKM2dJTUtpKzJzNDVMQXlD
+    RlJacFZUcktaSWdvbDU0MVgKRDdLOVlLaTZ2Zzh2Q3VWbkdoYTBxd25vdFQ4dDlOWHIxUkQyQWVo
+    dmNuN1BDeHVtZGlySEZ1NFBKSjhyMVhKMAoydlUxWnFuZXJ0eXl5SGFycjRBbm11VTZKUUtCZ1FE
+    NFRCWHYzWExybWRtQXFhSVcvemdmRFFnRW1lNDR5YWV2ClBxbGFTaTUrRTBmMlFybnFuTlVsbkZN
+    ZmN0QlhNZllQOVp4emM1M2hETEt5ZlUrQ1c2R2s4TUJxT2NkRmkySDgKUUd5eU9VbEs0WHByRW5W
+    MkN1WmczRDJINFpVNDJmMUNMaGVza1IrbUF6cE1ldWE5ZHdVSVh1SVJYQlU2Sk9zOQprK0lLR1dQ
+    RXlRS0JnR1dnbUtpaVRqNjI1a05RamVlM1l2NWxJVGw5VkVPTnlTSDNPV01XZ1V3RDNuQStwclpX
+    ClpqSEovdVVXcEMxcWtOeXJFbHZIaFVyQ2U5VFVZaEV5YlBrVWc0eCtqazVLbTNjbUJHZThlWnNo
+    bC9xc0lMakMKZGkrQk9heW5RaEdqTHVoTU4wZ09uODRJcWp4MW0zRHZFWlp2RytpSk4vaDZNUytK
+    dDZIcmRXTnBBb0dBV3JjeApySmt6eTNCQ1R3ZXErTXYyTFNJTnMrQ3BjSVg4aGNKWERXM2MzcU1j
+    djVSUmFLNDBFYkd6ak9IZHpIMnNjTmhECmVNcmMrOFF2NVpaeTNpV3NRUjdVcmZxK0cySjVRamdu
+    ZmxYL3VTUDRIZlo0ZzlBbnEydkw3MEV6eTdtWkZmelIKR1hOTUpOTTVFWWcxbFROTzIyZ1BJRmlN
+    U05vRU9GTTNXb2s4TWtFQ2dZQlBKWGR2WnZqWURPV0NubWlDT0FjcgpPVVF3SU9DSjdURDVKSWVy
+    VGpKRDdkN1pkT2FTTVVyWlpUZWZhdnJDaDJjTWJLeEV3WWhrTTM2YysvbFBKQlY3CmdkYVVMZElJ
+    blpqeU5ESW1XcnBBS05iaG52QkVic1Ixc213OWFRRmpSZWpQeThOL0owZXh4ZzJ2MytHK3FZNWYK
+    enRvQkN5aW1ReXpXT0dqaUpzeTVJZz09Ci0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0K
 
 type: kubernetes.io/tls
 
@@ -214,13 +241,13 @@ spec:
   rules:
   - http:
       paths:
-      - path: /nginx
+      - path: /
         pathType: Prefix
         backend:
           service:
-            name: busybox-multitool
+            name: busybox-multitool-svc
             port:
-              name: web-nginx
+              name: web1
   tls:
     - hosts:
       - nginx-multitool
