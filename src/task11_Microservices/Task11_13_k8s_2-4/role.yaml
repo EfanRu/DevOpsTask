@@ -1,0 +1,27 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: default
+  name: pod-access
+rules:
+  - apiGroups: [""]
+    resources: [ "pods", "pods/log" ]
+    verbs: [ "get", "watch", "list" ]
+  - apiGroups: [ "extensions", "apps" ]
+    resources: [ "deployments" ]
+    verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: pod-access-rb
+  namespace: default
+subjects:
+  - kind: User
+    name: slava
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: pod-access
+  apiGroup: rbac.authorization.k8s.io
