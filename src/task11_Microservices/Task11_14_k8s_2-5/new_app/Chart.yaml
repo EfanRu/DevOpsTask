@@ -1,0 +1,6 @@
+apiVersion: v2
+name: new-app
+description: A Helm nginx chart for Kubernetes
+type: application
+version: 0.1.0
+appVersion: "1.16.1"
