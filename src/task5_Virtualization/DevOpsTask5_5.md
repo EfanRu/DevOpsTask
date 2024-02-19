@@ -29,7 +29,7 @@
 
 # Решение 2
 
-![Скриншот Docker swarm node ls](Screenshoots/task5-5-img.png?raw=true)
+![Скриншот Docker swarm node ls](Screenshots/task5-5-img.png?raw=true)
 
 
 # Задание 3
@@ -41,7 +41,7 @@
 
 # Решение 3
 
-![Скриншот Docker swarm services](Screenshoots/task5-5-img2.png?raw=true)
+![Скриншот Docker swarm services](Screenshots/task5-5-img2.png?raw=true)
 
 
 # Задание 4

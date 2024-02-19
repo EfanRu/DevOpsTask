@@ -94,7 +94,7 @@ Handling connection for 8181
 
 ```
 5. Предоставить манифесты, а также скриншоты или вывод необходимых команд.
-![my_nginx.png](ScreenShoots%2Fmy_nginx.png)
+![my_nginx.png](ScreenShots%2Fmy_nginx.png)
 [manifest_2.yaml](manifest_2.yaml)
 ------
 
@@ -143,8 +143,8 @@ Handling connection for 30080
     Получилось подключиться через https к multitool, а к моему nginx не получается. Пробовал менять nginx.conf в контейнере 
     руками и рестартовал nginx, так же пробовал сетить файл конфигурации nginx из multitool в nginx (акомменченные строки), 
     но ничего не получилось :( Технически настроить ingress и подключиться по https получилось. 
-![https_connection_multitool.png](ScreenShoots%2Fhttps_connection_multitool.png)
-![https_connection_nginx.png](ScreenShoots%2Fhttps_connection_nginx.png)
+![https_connection_multitool.png](ScreenShots%2Fhttps_connection_multitool.png)
+![https_connection_nginx.png](ScreenShots%2Fhttps_connection_nginx.png)
 
 
 ------

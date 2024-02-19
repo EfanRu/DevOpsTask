@@ -85,7 +85,7 @@
     P.S.: если при запуске некоторые контейнеры будут падать с ошибкой - проставьте им режим Z, например ./data:/var/lib:Z
 
 ### Решение 7
-![Run_chronograph.png](Screenshoots%2FRun_chronograph.png)
+![Run_chronograph.png](Screenshots%2FRun_chronograph.png)
 
 
 ### Задание 8
@@ -100,7 +100,7 @@
 ### Решение 8
     SELECT mean("sys") AS "mean_sys" FROM "telegraf"."autogen"."influxdb_memstats" WHERE time > :dashboardTime: AND time < :upperDashboardTime: AND "host"='telegraf-getting-started' GROUP BY time(:interval:) FILL(null)
 
-![Mem_status.png](Screenshoots%2FMem_status.png)
+![Mem_status.png](Screenshots%2FMem_status.png)
 
 
 ### Задание 9
@@ -132,7 +132,7 @@
     В файле ./telegraf/telegraf.conf уже присутствует строка endpoint = "unix:///var/run/docker.sock".
     Репозиторий скачивал по ссылке в задании.
     Сделал все поинструкции. Магия не произошла, метрики docker не появились(( Или это и есть искомые метрики? 
-![Docker_metrics.png](Screenshoots%2FDocker_metrics.png)
+![Docker_metrics.png](Screenshots%2FDocker_metrics.png)
 
 
 ### Дополнительное Задание

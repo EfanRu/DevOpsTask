@@ -1,44 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-multitool-deployment
+  name: wiremock-deployment
   labels:
-    app: nginx-multitool
+    app: wiremock
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app:  nginx-multitool
+      app:  wiremock
   template:
     metadata:
       labels:
-        app:  nginx-multitool
+        app:  wiremock
     spec:
       containers:
-      - name: nginx
-        image: nginx:1.14.2
-        livenessProbe:
-          httpGet:
-            path: /
-            port: 8080
-          initialDelaySeconds:  10
-          periodSeconds:  5
+      - name: wiremock
+        image: wiremock:2.33.1
         ports:
           - containerPort: 8080
-            name: web
-            protocol: TCP
-      - name: multitool
-        image: wbitt/network-multitool
-        env:
-          - name: HTTP_PORT
-            value:  "81"
-        livenessProbe:
-          httpGet:
-            path: /
-            port: 8081
-          initialDelaySeconds:  10
-          periodSeconds:  5
-        ports:
-          - containerPort: 8081
             name: web
             protocol: TCP

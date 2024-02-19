@@ -44,7 +44,7 @@
     Создайте новый проект в teamcity на основе fork.
 
 ### Решение 1
-![Task_1_create_project_by_fork.png](Screenshoots%2FTask_1_create_project_by_fork.png)
+![Task_1_create_project_by_fork.png](Screenshots%2FTask_1_create_project_by_fork.png)
 
 ### Задание 2
     Сделайте autodetect конфигурации.
@@ -56,19 +56,19 @@
     Сохраните необходимые шаги, запустите первую сборку master.
 
 ### Решение 3
-![First_run.png](Screenshoots%2FFirst_run.png)
+![First_run.png](Screenshots%2FFirst_run.png)
 
 ### Задание 4
     Поменяйте условия сборки: если сборка по ветке master, то должен происходит mvn clean deploy, иначе mvn clean test.
 
 ### Решение 4
-![Change step condition.png](Screenshoots%2FChange%20step%20condition.png)
+![Change step condition.png](Screenshots%2FChange%20step%20condition.png)
 
 ### Задание 5
     Для deploy будет необходимо загрузить settings.xml в набор конфигураций maven у teamcity, предварительно записав туда креды для подключения к nexus.
 
 ### Решение 5
-![Change maven goal.png](Screenshoots%2FChange%20maven%20goal.png)
+![Change maven goal.png](Screenshots%2FChange%20maven%20goal.png)
 
 ### Задание 6
     В pom.xml необходимо поменять ссылки на репозиторий и nexus.
@@ -80,8 +80,8 @@
     Запустите сборку по master, убедитесь, что всё прошло успешно и артефакт появился в nexus.
 
 ### Решение 7
-![Passed deploy in nexus.png](Screenshoots%2FPassed%20deploy%20in%20nexus.png)
-![Excport in nexus.png](Screenshoots%2FExcport%20in%20nexus.png)
+![Passed deploy in nexus.png](Screenshots%2FPassed%20deploy%20in%20nexus.png)
+![Excport in nexus.png](Screenshots%2FExcport%20in%20nexus.png)
 
 ### Задание 8
     Мигрируйте build configuration в репозиторий.
@@ -169,7 +169,7 @@ Branch 'feature/add_reply' set up to track remote branch 'feature/add_reply' fro
     Убедитесь, что сборка самостоятельно запустилась, тесты прошли успешно.
 
 ### Решение 13
-![Check bualid auto run and success.png](Screenshoots%2FCheck%20bualid%20auto%20run%20and%20success.png)
+![Check bualid auto run and success.png](Screenshots%2FCheck%20bualid%20auto%20run%20and%20success.png)
 
 ### Задание 14
     Внесите изменения из произвольной ветки feature/add_reply в master через Merge.
@@ -191,7 +191,7 @@ Fast-forward
     Убедитесь, что нет собранного артефакта в сборке по ветке master.
 
 ### Решение 15
-![No_artefact_deploy.png](Screenshoots%2FNo_artefact_deploy.png)
+![No_artefact_deploy.png](Screenshots%2FNo_artefact_deploy.png)
 
 ### Задание 16
     Настройте конфигурацию так, чтобы она собирала .jar в артефакты сборки.
@@ -203,8 +203,8 @@ Fast-forward
     Проведите повторную сборку мастера, убедитесь, что сбора прошла успешно и артефакты собраны.
 
 ### Решение 17
-![Rerun_master.png](Screenshoots%2FRerun_master.png)
-![New_version_in_nexus.png](Screenshoots%2FNew_version_in_nexus.png)
+![Rerun_master.png](Screenshots%2FRerun_master.png)
+![New_version_in_nexus.png](Screenshots%2FNew_version_in_nexus.png)
 
 ### Задание 18
     Проверьте, что конфигурация в репозитории содержит все настройки конфигурации из teamcity.

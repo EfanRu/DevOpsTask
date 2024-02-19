@@ -111,7 +111,7 @@ slava@slava-FLAPTOP-r:~$ kubectl get nodes
 NAME            STATUS   ROLES    AGE   VERSION
 microk8s-test   Ready    <none>   56m   v1.27.5
 ```
-![get_nodes.png](ScreenShoots%2Fget_nodes.png)
+![get_nodes.png](ScreenShots%2Fget_nodes.png)
 
    Поднял дашборд на виртуалке
 ```commandline
@@ -158,7 +158,7 @@ permissions as shown in:
 https://github.com/kubernetes/dashboard/blob/master/docs/user/access-control/creating-sample-user.md
 
 ```
-![up_dashboard.png](ScreenShoots%2Fup_dashboard.png)
+![up_dashboard.png](ScreenShots%2Fup_dashboard.png)
 
 3. Подключиться к дашборду с помощью port-forward.
 ```commandline
@@ -166,7 +166,7 @@ slava@microk8s-test:~$ microk8s kubectl port-forward -n kube-system service/kube
 Forwarding from 127.0.0.1:10443 -> 8443
 Forwarding from [::1]:10443 -> 8443
 ```
-![port_forward.png](ScreenShoots%2Fport_forward.png)
+![port_forward.png](ScreenShots%2Fport_forward.png)
 
    Дальше было много попыток, но помогло:
    Добавить --address=0.0.0.0
@@ -187,7 +187,7 @@ xxx
 E1012 20:40:31.834261  131199 portforward.go:394] error copying from local connection to remote stream: read tcp4 10.1.0.14:10443->95.73.48.193:59834: read: connection reset by peer
 E1012 20:40:31.838277  131199 portforward.go:394] error copying from local connection to remote stream: read tcp4 10.1.0.14:10443->95.73.48.193:59842: read: connection reset by peer
 ```
-![dashboar_join_in.png](ScreenShoots%2Fdashboar_join_in.png)
+![dashboar_join_in.png](ScreenShots%2Fdashboar_join_in.png)
 
 
 ------

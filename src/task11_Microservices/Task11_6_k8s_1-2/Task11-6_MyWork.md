@@ -69,5 +69,5 @@ Forwarding from 127.0.0.1:8181 -> 8080
 Forwarding from [::1]:8181 -> 8080
 Handling connection for 8181
 ```
-![Connect_to_SVC_netology-web.png](ScreenShoots%2FConnect_to_SVC_netology-web.png)
+![Connect_to_SVC_netology-web.png](ScreenShots%2FConnect_to_SVC_netology-web.png)
 ------

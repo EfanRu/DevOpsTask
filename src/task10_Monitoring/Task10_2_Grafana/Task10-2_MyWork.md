@@ -34,19 +34,19 @@ CONTAINER ID   IMAGE                       COMMAND                  CREATED     
     Зайдите в веб-интерфейс grafana, используя авторизационные данные, указанные в манифесте docker-compose.
 
 #### Решение 1-2
-![EnjoyGrafana.png](ScreenShoots%2FEnjoyGrafana.png)
+![EnjoyGrafana.png](ScreenShots%2FEnjoyGrafana.png)
 
 #### Задание 1-3
     Подключите поднятый вами prometheus, как источник данных.
 
 #### Решение 1-3
-![ConnectPrometheus.png](ScreenShoots%2FConnectPrometheus.png)
+![ConnectPrometheus.png](ScreenShots%2FConnectPrometheus.png)
 
 #### Задание 1-4
     Решение домашнего задания — скриншот веб-интерфейса grafana со списком подключенных Datasource.
 
 #### Решение 1-4
-![ConnectedPrometheus.png](ScreenShoots%2FConnectedPrometheus.png)
+![ConnectedPrometheus.png](ScreenShots%2FConnectedPrometheus.png)
 
 ### Задание 2
     Изучите самостоятельно ресурсы:
@@ -65,7 +65,7 @@ CONTAINER ID   IMAGE                       COMMAND                  CREATED     
 ### Решение 2
     - утилизация CPU для nodeexporter (в процентах, 100-idle);
 100 - (avg(irate(node_cpu_seconds_total{mode="idle"}[30m])) * 100)
-![PanelCPUUtilization.png](ScreenShoots%2FPanelCPUUtilization.png)
+![PanelCPUUtilization.png](ScreenShots%2FPanelCPUUtilization.png)
 
     - CPULA 1/5/15;
 sum(
@@ -74,11 +74,11 @@ sum(
 
     - количество свободной оперативной памяти;
 node_memory_MemFree_bytes / (1024 ^ 3)
-![Free_RAM.png](ScreenShoots%2FFree%20RAM.png)
+![Free_RAM.png](ScreenShots%2FFree%20RAM.png)
 
     - количество места на файловой системе.
 node_filesystem_avail_bytes / (1024 ^ 3)
-![free_disk_space.png](ScreenShoots%2Ffree_disk_space.png)
+![free_disk_space.png](ScreenShots%2Ffree_disk_space.png)
 
 ### Задание 3
     Создайте для каждой Dashboard подходящее правило alert — можно обратиться к первой лекции в блоке «Мониторинг».
@@ -87,16 +87,16 @@ node_filesystem_avail_bytes / (1024 ^ 3)
 ### Решение 3
 
     - утилизация CPU для nodeexporter (в процентах, 100-idle);
-![CPU_nodeexporter_alert.png](ScreenShoots%2FCPU_nodeexporter_alert.png)
+![CPU_nodeexporter_alert.png](ScreenShots%2FCPU_nodeexporter_alert.png)
 
     - CPULA 1/5/15;
-![CPU_LA_alert.png](ScreenShoots%2FCPU_LA_alert.png)
+![CPU_LA_alert.png](ScreenShots%2FCPU_LA_alert.png)
 
     - количество свободной оперативной памяти;
-![free_disk_space_alert.png](ScreenShoots%2Ffree_disk_space_alert.png)
+![free_disk_space_alert.png](ScreenShots%2Ffree_disk_space_alert.png)
     
     - количество места на файловой системе.
-![free_disk_space_alert.png](ScreenShoots%2Ffree_disk_space_alert.png)
+![free_disk_space_alert.png](ScreenShots%2Ffree_disk_space_alert.png)
 
 ### Задание 4
     Сохраните ваш Dashboard.Для этого перейдите в настройки Dashboard, выберите в боковом меню «JSON MODEL». Далее скопируйте отображаемое json-содержимое в отдельный файл и сохраните его.

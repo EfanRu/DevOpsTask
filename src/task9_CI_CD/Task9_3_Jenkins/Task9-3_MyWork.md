@@ -119,13 +119,13 @@ jenkins-master-01          : ok=10   changed=1    unreachable=0    failed=0    s
     Запустить и проверить работоспособность.
 
 ### Решение 3
-![Start jenkins.png](Screenshoots%2FStart%20jenkins.png)
+![Start jenkins.png](Screenshots%2FStart%20jenkins.png)
 
 ### Задание 4
     Сделать первоначальную настройку.
 
 ### Решение 4
-![Run jenkis with agent.png](Screenshoots%2FRun%20jenkis%20with%20agent.png)    
+![Run jenkis with agent.png](Screenshots%2FRun%20jenkis%20with%20agent.png)    
 
 
 ## Основная часть
@@ -135,14 +135,14 @@ jenkins-master-01          : ok=10   changed=1    unreachable=0    failed=0    s
 
 ### Решение 1
     Сделать freestyle job получилось, но не смог подружить molecule и версией Python.
-![My freestyle job.png](Screenshoots%2FMy%20freestyle%20job.png)
+![My freestyle job.png](Screenshots%2FMy%20freestyle%20job.png)
 
 ### Задание 2
     Сделать Declarative Pipeline Job, который будет запускать molecule test из любого вашего репозитория с ролью.
 
 ### Решение 2
     Сделал Declarative pipeline, но так же как и в прошлом шаге не победил molecule и версией Python.
-![Declarative pipeline.png](Screenshoots%2FDeclarative%20pipeline.png)
+![Declarative pipeline.png](Screenshots%2FDeclarative%20pipeline.png)
 
 ### Задание 3
     Перенести Declarative Pipeline в репозиторий в файл Jenkinsfile.
@@ -156,13 +156,13 @@ jenkins-master-01          : ok=10   changed=1    unreachable=0    failed=0    s
 
 ### Решение 4
     Добавил файл Jenkinsfile в репозиторий и вычитываю из него
-![Multibranch pipeline.png](Screenshoots%2FMultibranch%20pipeline.png)
+![Multibranch pipeline.png](Screenshots%2FMultibranch%20pipeline.png)
 
 ### Задание 5
     Создать Scripted Pipeline, наполнить его скриптом из pipeline.
 
 ### Решение 5
-![Scripted.png](Screenshoots%2FScripted.png)
+![Scripted.png](Screenshots%2FScripted.png)
 
 ### Задание 6
     Внести необходимые изменения, чтобы Pipeline запускал ansible-playbook без флагов --check --diff, если не установлен 
@@ -172,14 +172,14 @@ jenkins-master-01          : ok=10   changed=1    unreachable=0    failed=0    s
 ### Решение 6
     Сделано. Параметр добавлен в pipe и выставляется при запуске сборки.
 [ScriptedJenkinsfile](pipeline%2FScriptedJenkinsfile)
-![Scripted with param.png](Screenshoots%2FScripted%20with%20param.png)
+![Scripted with param.png](Screenshots%2FScripted%20with%20param.png)
 
 ### Задание 7
     Проверить работоспособность, исправить ошибки, исправленный Pipeline вложить в репозиторий в файл ScriptedJenkinsfile.
 
 ### Решение 7
     Все проходит.
-![Scripted with param success.png](Screenshoots%2FScripted%20with%20param%20success.png)
+![Scripted with param success.png](Screenshots%2FScripted%20with%20param%20success.png)
 
 ### Задание 8
     Отправить ссылку на репозиторий с ролью и Declarative Pipeline и Scripted Pipeline.

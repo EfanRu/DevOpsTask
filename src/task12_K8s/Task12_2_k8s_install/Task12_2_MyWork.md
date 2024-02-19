@@ -40,9 +40,9 @@
 
 <details><summary>Скрины из клауда и консоли мастера:</summary>
 
-![cloud.png](Screenshoots%2Fcloud.png)
+![cloud.png](Screenshots%2Fcloud.png)
 
-![console.png](Screenshoots%2Fconsole.png)
+![console.png](Screenshots%2Fconsole.png)
 
 </details>
 

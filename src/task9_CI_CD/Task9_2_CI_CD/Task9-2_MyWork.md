@@ -240,7 +240,7 @@ sonar-01                   : ok=35   changed=27   unreachable=0    failed=0    s
 
 <details><summary>Скрин в браузере:</summary>
 
-![Check_sonar_in_browser.png](ScreenShoots/Check_sonar_in_browser.png)
+![Check_sonar_in_browser.png](ScreenShots/Check_sonar_in_browser.png)
 
 </details>
 
@@ -258,7 +258,7 @@ sonar-01                   : ok=35   changed=27   unreachable=0    failed=0    s
 
 <details><summary>Скрин в браузере:</summary>
 
-![img.png](ScreenShoots/Check_nexus_in_browser.png)
+![img.png](ScreenShots/Check_nexus_in_browser.png)
 
 </details>
 
@@ -422,7 +422,7 @@ INFO: ------------------------------------------------------------------------
 
 <details><summary>Результат анализа в браузере:</summary>
 
-![Result_of_Sonar_scanner.png](ScreenShoots%2FResult_of_Sonar_scanner.png)
+![Result_of_Sonar_scanner.png](ScreenShots%2FResult_of_Sonar_scanner.png)
 
 </details>
 
@@ -552,7 +552,7 @@ INFO: ------------------------------------------------------------------------
 
 <details><summary>Результат повторного анализа в браузере:</summary>
 
-![Result_of_Sonar_rescan.png](ScreenShoots%2FResult_of_Sonar_rescan.png)
+![Result_of_Sonar_rescan.png](ScreenShots%2FResult_of_Sonar_rescan.png)
 
 </details>
 
@@ -571,7 +571,7 @@ INFO: ------------------------------------------------------------------------
 
 <details><summary>Результат загрузки в браузере:</summary>
 
-![Upload_file_in_nexus.png](ScreenShoots%2FUpload_file_in_nexus.png)
+![Upload_file_in_nexus.png](ScreenShots%2FUpload_file_in_nexus.png)
 
 </details>
 
@@ -583,7 +583,7 @@ INFO: ------------------------------------------------------------------------
 
 <details><summary>Результат загрузки в браузере:</summary>
 
-![Upload_second_file_in_nexus.png](ScreenShoots%2FUpload_second_file_in_nexus.png)
+![Upload_second_file_in_nexus.png](ScreenShots%2FUpload_second_file_in_nexus.png)
 
 </details>
 
