@@ -2,6 +2,7 @@
   * [Цели:](#цели)
   * [Этапы выполнения:](#этапы-выполнения)
      * [Создание облачной инфраструктуры](#создание-облачной-инфраструктуры)
+     * [Решение создание облачной инфраструктуры](#решение-создание-облачной-инфраструктуры)
      * [Создание Kubernetes кластера](#создание-kubernetes-кластера)
      * [Создание тестового приложения](#создание-тестового-приложения)
      * [Подготовка cистемы мониторинга и деплой приложения](#подготовка-cистемы-мониторинга-и-деплой-приложения)
@@ -31,30 +32,34 @@
 
 - Версия [Terraform](https://www.terraform.io/) не старше 1.5.x .
 
+Предварительная подготовка к установке и запуску Kubernetes кластера.
+
+1. Создайте сервисный аккаунт, который будет в дальнейшем использоваться Terraform для работы с инфраструктурой с необходимыми и достаточными правами. Не стоит использовать права суперпользователя.
+2. Подготовьте [backend](https://www.terraform.io/docs/language/settings/backends/index.html) для Terraform:  
+   а. Рекомендуемый вариант: S3 bucket в созданном ЯО аккаунте(создание бакета через TF)
+   б. Альтернативный вариант:  [Terraform Cloud](https://app.terraform.io/)
+3. Создайте VPC с подсетями в разных зонах доступности.
+4. Убедитесь, что теперь вы можете выполнить команды `terraform destroy` и `terraform apply` без дополнительных ручных действий.
+5. В случае использования [Terraform Cloud](https://app.terraform.io/) в качестве [backend](https://www.terraform.io/docs/language/settings/backends/index.html) убедитесь, что применение изменений успешно проходит, используя web-интерфейс Terraform cloud.
+
+Ожидаемые результаты:
+
+1. Terraform сконфигурирован и создание инфраструктуры посредством Terraform возможно без дополнительных ручных действий.
+2. Полученная конфигурация инфраструктуры является предварительной, поэтому в ходе дальнейшего выполнения задания возможны изменения.
+
+---
+
+### Решение создание облачной инфраструктуры
+
+        Версия terraform не старше 1.5.x .
 ```commandline
 slava@slava-FLAPTOP-r:~$ terraform --version
 Terraform v1.3.9
 on linux_amd64
 ```
 
-Предварительная подготовка к установке и запуску Kubernetes кластера.
-
-1. Сервисный аккаунт, который будет в дальнейшем использоваться Terraform для работы с инфраструктурой с необходимыми и достаточными правами. Будет использоваться service account srv-acc-k8s без права суперпользователя
-```commandline
-slava@slava-FLAPTOP-r:~$ yc iam service-account list
-+----------------------+-------------+
-|          ID          |    NAME     |
-+----------------------+-------------+
-| aje9s78leilfn5opeelp | srv-acc     |
-| ajenhqofldtuaiv2j259 | srv-acc-k8s |
-+----------------------+-------------+
-
-```
-2. Подготовьте [backend](https://www.terraform.io/docs/language/settings/backends/index.html) для Terraform:  
-   а. Рекомендуемый вариант: S3 bucket в созданном ЯО аккаунте(создание бакета через TF)
-   б. Альтернативный вариант:  [Terraform Cloud](https://app.terraform.io/)  
-
-    Чтобы не хранить чувствительные данные в коде засетим их в переменные окружения:
+        Сервисный аккаунт будет создаваться тоже через terraform через resource "yandex_iam_service_account".
+        Чтобы не хранить чувствительные данные в коде засетим их в переменные окружения:
 
 ```commandline
 slava@slava-FLAPTOP-r:~$ export TF_VAR_YC_TOKEN=$(yc iam create-token)
@@ -63,10 +68,10 @@ slava@slava-FLAPTOP-r:~$ export TF_VAR_YC_FOLDER_ID=$(yc config get folder-id)
 slava@slava-FLAPTOP-r:~$ terraform init
 ```
 
-<details><summary>Terraform plan in YC:</summary>
+<details><summary>Terraform apply in YC:</summary>
 
 ```commandline
-slava@slava-FLAPTOP-r:~$ terraform plan
+slava@slava-FLAPTOP-r:~/Documents/DevOpsTask/src/graduate_work$ terraform apply
 
 Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
   + create
@@ -78,7 +83,7 @@ Terraform will perform the following actions:
       + created_at = (known after apply)
       + folder_id  = (known after apply)
       + id         = (known after apply)
-      + name       = "srv-acc-k8s"
+      + name       = "svc-acc-grd"
     }
 
   # yandex_iam_service_account_static_access_key.sa-static-key will be created
@@ -104,48 +109,6 @@ Terraform will perform the following actions:
   # yandex_storage_bucket.test will be created
   + resource "yandex_storage_bucket" "test" {
       + access_key            = (known after apply)
-      + bucket                = "efanov_bucket_graduate"
-      + bucket_domain_name    = (known after apply)
-      + default_storage_class = (known after apply)
-      + folder_id             = (known after apply)
-      + force_destroy         = false
-      + id                    = (known after apply)
-      + secret_key            = (sensitive value)
-      + website_domain        = (known after apply)
-      + website_endpoint      = (known after apply)
-
-      + anonymous_access_flags {
-          + config_read = (known after apply)
-          + list        = (known after apply)
-          + read        = (known after apply)
-        }
-
-      + versioning {
-          + enabled = (known after apply)
-        }
-    }
-
-Plan: 4 to add, 0 to change, 0 to destroy.
-```
-
-</details>
-
-<details><summary>Terraform apply in YC:</summary>
-
-```commandline
-slava@slava-FLAPTOP-r:~/Documents/DevOpsTask/src/graduate_work$ terraform apply
-yandex_iam_service_account.sa: Refreshing state... [id=ajetmva56kg9mg1ifuff]
-yandex_iam_service_account_static_access_key.sa-static-key: Refreshing state... [id=ajeskcauqg0jcabdd9eb]
-yandex_resourcemanager_folder_iam_member.sa-editor: Refreshing state... [id=b1gk7s99783hucvo6t4s/storage.editor/serviceAccount:ajetmva56kg9mg1ifuff]
-
-Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
-  + create
-
-Terraform will perform the following actions:
-
-  # yandex_storage_bucket.test will be created
-  + resource "yandex_storage_bucket" "test" {
-      + access_key            = "xxx"
       + bucket                = "efanov-bucket-graduate"
       + bucket_domain_name    = (known after apply)
       + default_storage_class = (known after apply)
@@ -167,7 +130,128 @@ Terraform will perform the following actions:
         }
     }
 
-Plan: 1 to add, 0 to change, 0 to destroy.
+  # yandex_vpc_network.vpc will be created
+  + resource "yandex_vpc_network" "vpc" {
+      + created_at                = (known after apply)
+      + default_security_group_id = (known after apply)
+      + folder_id                 = (known after apply)
+      + id                        = (known after apply)
+      + labels                    = (known after apply)
+      + name                      = "graduate-vpc"
+      + subnet_ids                = (known after apply)
+    }
+
+  # yandex_vpc_security_group.nat-instance-sg will be created
+  + resource "yandex_vpc_security_group" "nat-instance-sg" {
+      + created_at = (known after apply)
+      + folder_id  = (known after apply)
+      + id         = (known after apply)
+      + labels     = (known after apply)
+      + name       = "nat-instance-sg"
+      + network_id = (known after apply)
+      + status     = (known after apply)
+
+      + egress {
+          + description    = "any"
+          + from_port      = -1
+          + id             = (known after apply)
+          + labels         = (known after apply)
+          + port           = -1
+          + protocol       = "ANY"
+          + to_port        = -1
+          + v4_cidr_blocks = [
+              + "0.0.0.0/0",
+            ]
+          + v6_cidr_blocks = []
+        }
+
+      + ingress {
+          + description    = "ext-http"
+          + from_port      = -1
+          + id             = (known after apply)
+          + labels         = (known after apply)
+          + port           = 80
+          + protocol       = "TCP"
+          + to_port        = -1
+          + v4_cidr_blocks = [
+              + "0.0.0.0/0",
+            ]
+          + v6_cidr_blocks = []
+        }
+      + ingress {
+          + description    = "ext-https"
+          + from_port      = -1
+          + id             = (known after apply)
+          + labels         = (known after apply)
+          + port           = 443
+          + protocol       = "TCP"
+          + to_port        = -1
+          + v4_cidr_blocks = [
+              + "0.0.0.0/0",
+            ]
+          + v6_cidr_blocks = []
+        }
+      + ingress {
+          + description    = "ssh"
+          + from_port      = -1
+          + id             = (known after apply)
+          + labels         = (known after apply)
+          + port           = 22
+          + protocol       = "TCP"
+          + to_port        = -1
+          + v4_cidr_blocks = [
+              + "0.0.0.0/0",
+            ]
+          + v6_cidr_blocks = []
+        }
+    }
+
+  # yandex_vpc_subnet.public-a will be created
+  + resource "yandex_vpc_subnet" "public-a" {
+      + created_at     = (known after apply)
+      + folder_id      = (known after apply)
+      + id             = (known after apply)
+      + labels         = (known after apply)
+      + name           = "public-a"
+      + network_id     = (known after apply)
+      + v4_cidr_blocks = [
+          + "192.168.10.0/24",
+        ]
+      + v6_cidr_blocks = (known after apply)
+      + zone           = "ru-central1-a"
+    }
+
+  # yandex_vpc_subnet.public-b will be created
+  + resource "yandex_vpc_subnet" "public-b" {
+      + created_at     = (known after apply)
+      + folder_id      = (known after apply)
+      + id             = (known after apply)
+      + labels         = (known after apply)
+      + name           = "public-b"
+      + network_id     = (known after apply)
+      + v4_cidr_blocks = [
+          + "192.168.11.0/24",
+        ]
+      + v6_cidr_blocks = (known after apply)
+      + zone           = "ru-central1-b"
+    }
+
+  # yandex_vpc_subnet.public-c will be created
+  + resource "yandex_vpc_subnet" "public-c" {
+      + created_at     = (known after apply)
+      + folder_id      = (known after apply)
+      + id             = (known after apply)
+      + labels         = (known after apply)
+      + name           = "public-c"
+      + network_id     = (known after apply)
+      + v4_cidr_blocks = [
+          + "192.168.12.0/24",
+        ]
+      + v6_cidr_blocks = (known after apply)
+      + zone           = "ru-central1-c"
+    }
+
+Plan: 9 to add, 0 to change, 0 to destroy.
 
 Do you want to perform these actions?
   Terraform will perform the actions described above.
@@ -175,7 +259,23 @@ Do you want to perform these actions?
 
   Enter a value: yes
 
+yandex_iam_service_account.sa: Creating...
+yandex_vpc_network.vpc: Creating...
+yandex_vpc_network.vpc: Creation complete after 3s [id=enpjr01oj7un38r6k9uo]
+yandex_vpc_subnet.public-a: Creating...
+yandex_vpc_subnet.public-c: Creating...
+yandex_vpc_subnet.public-b: Creating...
+yandex_vpc_security_group.nat-instance-sg: Creating...
+yandex_iam_service_account.sa: Creation complete after 3s [id=aje5p4r3n4ole175h9r0]
+yandex_iam_service_account_static_access_key.sa-static-key: Creating...
+yandex_resourcemanager_folder_iam_member.sa-editor: Creating...
+yandex_vpc_subnet.public-a: Creation complete after 0s [id=e9bcsijrj7gfadd2ir6s]
+yandex_vpc_subnet.public-c: Creation complete after 1s [id=b0chv9r0jc2bgjlc0osc]
+yandex_vpc_subnet.public-b: Creation complete after 1s [id=e2llt1c5cu33dip3jcek]
+yandex_iam_service_account_static_access_key.sa-static-key: Creation complete after 2s [id=aje4seqjgifn8010q3hu]
 yandex_storage_bucket.test: Creating...
+yandex_vpc_security_group.nat-instance-sg: Creation complete after 2s [id=enpj41q4dacvikd78mke]
+yandex_resourcemanager_folder_iam_member.sa-editor: Creation complete after 3s [id=b1gk7s99783hucvo6t4s/storage.editor/serviceAccount:aje5p4r3n4ole175h9r0]
 yandex_storage_bucket.test: Still creating... [10s elapsed]
 yandex_storage_bucket.test: Still creating... [20s elapsed]
 yandex_storage_bucket.test: Still creating... [30s elapsed]
@@ -188,21 +288,242 @@ yandex_storage_bucket.test: Still creating... [1m30s elapsed]
 yandex_storage_bucket.test: Still creating... [1m40s elapsed]
 yandex_storage_bucket.test: Still creating... [1m50s elapsed]
 yandex_storage_bucket.test: Still creating... [2m0s elapsed]
-yandex_storage_bucket.test: Creation complete after 2m3s [id=efanov-bucket-graduate]
+yandex_storage_bucket.test: Creation complete after 2m2s [id=efanov-bucket-graduate]
 
-Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
+Apply complete! Resources: 9 added, 0 changed, 0 destroyed.
 ```
 
 </details>
 
-3. Создайте VPC с подсетями в разных зонах доступности.
-4. Убедитесь, что теперь вы можете выполнить команды `terraform destroy` и `terraform apply` без дополнительных ручных действий.
-5. В случае использования [Terraform Cloud](https://app.terraform.io/) в качестве [backend](https://www.terraform.io/docs/language/settings/backends/index.html) убедитесь, что применение изменений успешно проходит, используя web-интерфейс Terraform cloud.
+<details><summary>Terraform destroy in YC:</summary>
 
-Ожидаемые результаты:
+```commandline
+slava@slava-FLAPTOP-r:~/Documents/DevOpsTask/src/graduate_work$ terraform destroy
+yandex_iam_service_account.sa: Refreshing state... [id=aje5p4r3n4ole175h9r0]
+yandex_vpc_network.vpc: Refreshing state... [id=enpjr01oj7un38r6k9uo]
+yandex_resourcemanager_folder_iam_member.sa-editor: Refreshing state... [id=b1gk7s99783hucvo6t4s/storage.editor/serviceAccount:aje5p4r3n4ole175h9r0]
+yandex_iam_service_account_static_access_key.sa-static-key: Refreshing state... [id=aje4seqjgifn8010q3hu]
+yandex_storage_bucket.test: Refreshing state... [id=efanov-bucket-graduate]
+yandex_vpc_subnet.public-b: Refreshing state... [id=e2llt1c5cu33dip3jcek]
+yandex_vpc_subnet.public-a: Refreshing state... [id=e9bcsijrj7gfadd2ir6s]
+yandex_vpc_subnet.public-c: Refreshing state... [id=b0chv9r0jc2bgjlc0osc]
+yandex_vpc_security_group.nat-instance-sg: Refreshing state... [id=enpj41q4dacvikd78mke]
 
-1. Terraform сконфигурирован и создание инфраструктуры посредством Terraform возможно без дополнительных ручных действий.
-2. Полученная конфигурация инфраструктуры является предварительной, поэтому в ходе дальнейшего выполнения задания возможны изменения.
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+  - destroy
+
+Terraform will perform the following actions:
+
+  # yandex_iam_service_account.sa will be destroyed
+  - resource "yandex_iam_service_account" "sa" {
+      - created_at = "2024-02-22T19:38:05Z" -> null
+      - folder_id  = "b1gk7s99783hucvo6t4s" -> null
+      - id         = "aje5p4r3n4ole175h9r0" -> null
+      - name       = "svc-acc-grd" -> null
+    }
+
+  # yandex_iam_service_account_static_access_key.sa-static-key will be destroyed
+  - resource "yandex_iam_service_account_static_access_key" "sa-static-key" {
+      - access_key         = "YCAJEF1BCbK2WXqatDWCElfTI" -> null
+      - created_at         = "2024-02-22T19:38:07Z" -> null
+      - description        = "static access key for object storage" -> null
+      - id                 = "aje4seqjgifn8010q3hu" -> null
+      - secret_key         = (sensitive value)
+      - service_account_id = "aje5p4r3n4ole175h9r0" -> null
+    }
+
+  # yandex_resourcemanager_folder_iam_member.sa-editor will be destroyed
+  - resource "yandex_resourcemanager_folder_iam_member" "sa-editor" {
+      - folder_id = "b1gk7s99783hucvo6t4s" -> null
+      - id        = "b1gk7s99783hucvo6t4s/storage.editor/serviceAccount:aje5p4r3n4ole175h9r0" -> null
+      - member    = "serviceAccount:aje5p4r3n4ole175h9r0" -> null
+      - role      = "storage.editor" -> null
+    }
+
+  # yandex_storage_bucket.test will be destroyed
+  - resource "yandex_storage_bucket" "test" {
+      - access_key            = "YCAJEF1BCbK2WXqatDWCElfTI" -> null
+      - bucket                = "efanov-bucket-graduate" -> null
+      - bucket_domain_name    = "efanov-bucket-graduate.storage.yandexcloud.net" -> null
+      - default_storage_class = "STANDARD" -> null
+      - folder_id             = "b1gk7s99783hucvo6t4s" -> null
+      - force_destroy         = false -> null
+      - id                    = "efanov-bucket-graduate" -> null
+      - max_size              = 0 -> null
+      - policy                = "" -> null
+      - secret_key            = (sensitive value)
+      - tags                  = {} -> null
+
+      - anonymous_access_flags {
+          - config_read = false -> null
+          - list        = false -> null
+          - read        = false -> null
+        }
+
+      - versioning {
+          - enabled = false -> null
+        }
+    }
+
+  # yandex_vpc_network.vpc will be destroyed
+  - resource "yandex_vpc_network" "vpc" {
+      - created_at                = "2024-02-22T19:38:05Z" -> null
+      - default_security_group_id = "enpas4opjtm5c2r907do" -> null
+      - folder_id                 = "b1gk7s99783hucvo6t4s" -> null
+      - id                        = "enpjr01oj7un38r6k9uo" -> null
+      - labels                    = {} -> null
+      - name                      = "graduate-vpc" -> null
+      - subnet_ids                = [
+          - "b0chv9r0jc2bgjlc0osc",
+          - "e2llt1c5cu33dip3jcek",
+          - "e9bcsijrj7gfadd2ir6s",
+        ] -> null
+    }
+
+  # yandex_vpc_security_group.nat-instance-sg will be destroyed
+  - resource "yandex_vpc_security_group" "nat-instance-sg" {
+      - created_at = "2024-02-22T19:38:08Z" -> null
+      - folder_id  = "b1gk7s99783hucvo6t4s" -> null
+      - id         = "enpj41q4dacvikd78mke" -> null
+      - labels     = {} -> null
+      - name       = "nat-instance-sg" -> null
+      - network_id = "enpjr01oj7un38r6k9uo" -> null
+      - status     = "ACTIVE" -> null
+
+      - egress {
+          - description    = "any" -> null
+          - from_port      = -1 -> null
+          - id             = "enpojlsaa3spj4agldcc" -> null
+          - labels         = {} -> null
+          - port           = -1 -> null
+          - protocol       = "ANY" -> null
+          - to_port        = -1 -> null
+          - v4_cidr_blocks = [
+              - "0.0.0.0/0",
+            ] -> null
+          - v6_cidr_blocks = [] -> null
+        }
+
+      - ingress {
+          - description    = "ext-http" -> null
+          - from_port      = -1 -> null
+          - id             = "enp6llr94vccop381ip2" -> null
+          - labels         = {} -> null
+          - port           = 80 -> null
+          - protocol       = "TCP" -> null
+          - to_port        = -1 -> null
+          - v4_cidr_blocks = [
+              - "0.0.0.0/0",
+            ] -> null
+          - v6_cidr_blocks = [] -> null
+        }
+      - ingress {
+          - description    = "ext-https" -> null
+          - from_port      = -1 -> null
+          - id             = "enp5m6kb6539qtl5uo2q" -> null
+          - labels         = {} -> null
+          - port           = 443 -> null
+          - protocol       = "TCP" -> null
+          - to_port        = -1 -> null
+          - v4_cidr_blocks = [
+              - "0.0.0.0/0",
+            ] -> null
+          - v6_cidr_blocks = [] -> null
+        }
+      - ingress {
+          - description    = "ssh" -> null
+          - from_port      = -1 -> null
+          - id             = "enphuvhgb91r0cnsdsmr" -> null
+          - labels         = {} -> null
+          - port           = 22 -> null
+          - protocol       = "TCP" -> null
+          - to_port        = -1 -> null
+          - v4_cidr_blocks = [
+              - "0.0.0.0/0",
+            ] -> null
+          - v6_cidr_blocks = [] -> null
+        }
+    }
+
+  # yandex_vpc_subnet.public-a will be destroyed
+  - resource "yandex_vpc_subnet" "public-a" {
+      - created_at     = "2024-02-22T19:38:06Z" -> null
+      - folder_id      = "b1gk7s99783hucvo6t4s" -> null
+      - id             = "e9bcsijrj7gfadd2ir6s" -> null
+      - labels         = {} -> null
+      - name           = "public-a" -> null
+      - network_id     = "enpjr01oj7un38r6k9uo" -> null
+      - v4_cidr_blocks = [
+          - "192.168.10.0/24",
+        ] -> null
+      - v6_cidr_blocks = [] -> null
+      - zone           = "ru-central1-a" -> null
+    }
+
+  # yandex_vpc_subnet.public-b will be destroyed
+  - resource "yandex_vpc_subnet" "public-b" {
+      - created_at     = "2024-02-22T19:38:07Z" -> null
+      - folder_id      = "b1gk7s99783hucvo6t4s" -> null
+      - id             = "e2llt1c5cu33dip3jcek" -> null
+      - labels         = {} -> null
+      - name           = "public-b" -> null
+      - network_id     = "enpjr01oj7un38r6k9uo" -> null
+      - v4_cidr_blocks = [
+          - "192.168.11.0/24",
+        ] -> null
+      - v6_cidr_blocks = [] -> null
+      - zone           = "ru-central1-b" -> null
+    }
+
+  # yandex_vpc_subnet.public-c will be destroyed
+  - resource "yandex_vpc_subnet" "public-c" {
+      - created_at     = "2024-02-22T19:38:07Z" -> null
+      - folder_id      = "b1gk7s99783hucvo6t4s" -> null
+      - id             = "b0chv9r0jc2bgjlc0osc" -> null
+      - labels         = {} -> null
+      - name           = "public-c" -> null
+      - network_id     = "enpjr01oj7un38r6k9uo" -> null
+      - v4_cidr_blocks = [
+          - "192.168.12.0/24",
+        ] -> null
+      - v6_cidr_blocks = [] -> null
+      - zone           = "ru-central1-c" -> null
+    }
+
+Plan: 0 to add, 0 to change, 9 to destroy.
+
+Do you really want to destroy all resources?
+  Terraform will destroy all your managed infrastructure, as shown above.
+  There is no undo. Only 'yes' will be accepted to confirm.
+
+  Enter a value: yes
+
+yandex_vpc_subnet.public-b: Destroying... [id=e2llt1c5cu33dip3jcek]
+yandex_resourcemanager_folder_iam_member.sa-editor: Destroying... [id=b1gk7s99783hucvo6t4s/storage.editor/serviceAccount:aje5p4r3n4ole175h9r0]
+yandex_vpc_subnet.public-a: Destroying... [id=e9bcsijrj7gfadd2ir6s]
+yandex_vpc_subnet.public-c: Destroying... [id=b0chv9r0jc2bgjlc0osc]
+yandex_storage_bucket.test: Destroying... [id=efanov-bucket-graduate]
+yandex_vpc_security_group.nat-instance-sg: Destroying... [id=enpj41q4dacvikd78mke]
+yandex_vpc_subnet.public-a: Destruction complete after 0s
+yandex_vpc_security_group.nat-instance-sg: Destruction complete after 0s
+yandex_vpc_subnet.public-c: Destruction complete after 1s
+yandex_vpc_subnet.public-b: Destruction complete after 1s
+yandex_vpc_network.vpc: Destroying... [id=enpjr01oj7un38r6k9uo]
+yandex_vpc_network.vpc: Destruction complete after 1s
+yandex_resourcemanager_folder_iam_member.sa-editor: Destruction complete after 3s
+yandex_storage_bucket.test: Still destroying... [id=efanov-bucket-graduate, 10s elapsed]
+yandex_storage_bucket.test: Destruction complete after 11s
+yandex_iam_service_account_static_access_key.sa-static-key: Destroying... [id=aje4seqjgifn8010q3hu]
+yandex_iam_service_account_static_access_key.sa-static-key: Destruction complete after 1s
+yandex_iam_service_account.sa: Destroying... [id=aje5p4r3n4ole175h9r0]
+yandex_iam_service_account.sa: Destruction complete after 3s
+
+Destroy complete! Resources: 9 destroyed.
+
+```
+
+</details>
+
 
 ---
 ### Создание Kubernetes кластера
