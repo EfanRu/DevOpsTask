@@ -2,7 +2,11 @@ locals {
   network_name     = "graduate-vpc"
   subnet_name1     = "public-a"
   subnet_name2     = "public-b"
-  subnet_name3     = "public-c"
+  vm_master_a_name   = "master-a"
+  vm_master_b_name   = "master-b"
+  vm_master_c_name   = "master-c"
+  vm_worker_a_name   = "worker-a"
+  vm_worker_b_name   = "worker-b"
   sg_nat_name      = "nat-instance-sg"
 }
 
@@ -66,13 +70,6 @@ resource "yandex_vpc_subnet" "public-b" {
   zone           = "ru-central1-b"
   network_id     = yandex_vpc_network.vpc.id
   v4_cidr_blocks = ["192.168.11.0/24"]
-}
-
-resource "yandex_vpc_subnet" "public-c" {
-  name           = local.subnet_name3
-  zone           = "ru-central1-c"
-  network_id     = yandex_vpc_network.vpc.id
-  v4_cidr_blocks = ["192.168.12.0/24"]
 }
 
 # Creating a security group
