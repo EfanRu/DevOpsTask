@@ -1,16 +1,17 @@
 locals {
-  network_name        = "graduate-vpc"
-  subnet_name_master1_a = "subnet-master1-a"
-  subnet_name_master1_b = "subnet-master1-b"
-  subnet_name_master2_a = "subnet-master2-a"
-  subnet_name_worker1_a = "subnet-worker1-a"
-  subnet_name_worker1_b = "subnet-worker1-b"
-  vm_master1_a_name     = "vm-master1-a"
-  vm_master1_b_name     = "vm-master1-b"
-  vm_master2_a_name     = "vm-master2-a"
-  vm_worker1_a_name     = "vm-worker1-a"
-  vm_worker1_b_name     = "vm-worker1-b"
-  sg_nat_name           = "nat-instance-sg"
+  network_shared_name = "vpc-shared"
+  network_a_name      = "vpc-a"
+  network_b_name      = "vpc-b"
+  subnet_name_a       = "subnet-a"
+  subnet_name_b       = "subnet-b"
+  zone_a              = "ru-central1-a"
+  zone_b              = "ru-central1-b"
+  vm_master1_a_name   = "vm-master1-a"
+  vm_master1_b_name   = "vm-master1-b"
+  vm_master2_a_name   = "vm-master2-a"
+  vm_worker1_a_name   = "vm-worker1-a"
+  vm_worker1_b_name   = "vm-worker1-b"
+  sg_nat_name         = "nat-instance-sg"
 }
 
 terraform {
@@ -53,63 +54,41 @@ resource "yandex_storage_bucket" "test" {
   bucket     = "efanov-bucket-graduate"
 }
 
+# Folders
+
+resource "yandex_resourcemanager_folder" "folder-a" {
+  cloud_id = var.YC_CLOUD_ID
+  name     = "folder-a"
+}
+
+resource "yandex_resourcemanager_folder" "folder-b" {
+  cloud_id = var.YC_CLOUD_ID
+  name     = "folder-b"
+}
+
 # Creating a cloud network
 
-#module "yc-vpc" {
-#  source              = "github.com/terraform-yc-modules/terraform-yc-vpc.git"
-#  network_name        = local.network_name
-#  network_description = "Graduate DevOps network created with module"
-#  private_subnets = [{
-#    name           = local.subnet_name_a
-#    zone           = "ru-central1-a"
-#    v4_cidr_blocks = ["10.10.0.0/24"]
-#  },
-#  {
-#    name           = local.subnet_name_b
-#    zone           = "ru-central1-b"
-#    v4_cidr_blocks = ["10.11.0.0/24"]
-#  }]
-#}
-
 resource "yandex_vpc_network" "vpc" {
-  name = local.network_name
+  name      = local.network_shared_name
+  folder_id = yandex_resourcemanager_folder.folder-a.id
 }
 
 # Creating subnets
 
-resource "yandex_vpc_subnet" "subnet-master1-a" {
-  name           = local.subnet_name_master1_a
-  zone           = "ru-central1-a"
+resource "yandex_vpc_subnet" "subnet-a" {
+  name           = local.subnet_name_a
+  zone           = local.zone_a
   network_id     = yandex_vpc_network.vpc.id
+  folder_id      = yandex_resourcemanager_folder.folder-a.id
   v4_cidr_blocks = ["192.168.10.0/24"]
 }
 
-resource "yandex_vpc_subnet" "subnet-master1-b" {
-  name           = local.subnet_name_master1_b
-  zone           = "ru-central1-b"
+resource "yandex_vpc_subnet" "subnet-b" {
+  name           = local.subnet_name_b
+  zone           = local.zone_b
   network_id     = yandex_vpc_network.vpc.id
+  folder_id      = yandex_resourcemanager_folder.folder-b.id
   v4_cidr_blocks = ["192.168.11.0/24"]
-}
-
-resource "yandex_vpc_subnet" "subnet-master2-a" {
-  name           = local.subnet_name_master2_a
-  zone           = "ru-central1-a"
-  network_id     = yandex_vpc_network.vpc.id
-  v4_cidr_blocks = ["192.168.12.0/24"]
-}
-
-resource "yandex_vpc_subnet" "subnet-worker1-a" {
-  name           = local.subnet_name_worker1_a
-  zone           = "ru-central1-a"
-  network_id     = yandex_vpc_network.vpc.id
-  v4_cidr_blocks = ["192.168.13.0/24"]
-}
-
-resource "yandex_vpc_subnet" "subnet-worker1-b" {
-  name           = local.subnet_name_worker1_b
-  zone           = "ru-central1-b"
-  network_id     = yandex_vpc_network.vpc.id
-  v4_cidr_blocks = ["192.168.14.0/24"]
 }
 
 # Creating a security group
