@@ -65,7 +65,6 @@ on linux_amd64
 slava@slava-FLAPTOP-r:~$ export TF_VAR_YC_TOKEN=$(yc iam create-token)
 slava@slava-FLAPTOP-r:~$ export TF_VAR_YC_CLOUD_ID=$(yc config get cloud-id)
 slava@slava-FLAPTOP-r:~$ export TF_VAR_YC_FOLDER_ID=$(yc config get folder-id)
-slava@slava-FLAPTOP-r:~$ terraform init
 ```
 
 <details><summary>Terraform apply in YC:</summary>

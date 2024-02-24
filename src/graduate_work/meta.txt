@@ -5,4 +5,4 @@ users:
     shell: /bin/bash
     sudo: ['ALL=(ALL) NOPASSWD:ALL']
     ssh_authorized_keys:
-      - ssh-rsa ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDNOoYLXwULd7eG71Zl9/MyWbpGeOw/n45fD50VTb5KefkETeubnI6Mudg+wGDTqaSBxztAYNEWFJrewr8K3Ymk9utl7kJM2CPFEGyDNGR4bK+2NftCjDxe3p4xw+LW687QJ4VN9VPS71IYfJlswk4e1PVp1C/67LhfJmSyRMD33W8nY5uiXv3fCTalXnkgGqYiz9ccKYopqOAVtjhfaiqVAKofah0UYgClmp5KtJ1TcYFMPBNyvB+hdbLCGRdjrXgEYG5JoZuqF9WK5QQEOOCEOdcrVlUhD47eYgrQ1tbvCQgb9hH/nuxexJJ9hlAus/fZHr9etYTo1xMdxbwmwiJvxCEctqwSG7nuSuQjohB3WMzC79CvE8G0137h8bFpkuPFFegmLz+rX0UuoFkFmfmIIwx1IYh0ys8kWYVywT9ACeS7oRxfmehFyxM3NrOkeuo8M7ejysQHnaoZAbNZmKl0/X4J9uF0HxyJQ8h/rY0nKmwXZkcXTaVIwBnuIwCTqKc= slava@slava-FLAPTOP-r
+      - ssh-rsa xxx

@@ -2,8 +2,8 @@ resource "yandex_compute_image" "ubuntu_2004" {
   source_family = "ubuntu-2004-lts"
 }
 
-resource "yandex_compute_instance" "vm-master-a" {
-  name = local.vm_master_a_name
+resource "yandex_compute_instance" "vm-master1-a" {
+  name = local.vm_master1_a_name
 
   boot_disk {
     initialize_params {
@@ -11,20 +11,21 @@ resource "yandex_compute_instance" "vm-master-a" {
     }
   }
   network_interface {
-    subnet_id = yandex_vpc_subnet.public-a.id
+    subnet_id = yandex_vpc_subnet.subnet-master1-a.id
     nat       = true
   }
   resources {
-    cores  = 2
-    memory = 2
+    core_fraction = 5
+    cores         = 2
+    memory        = 2
   }
   metadata = {
     user-data = "${file("./meta.txt")}"
   }
 }
 
-resource "yandex_compute_instance" "vm-master-b" {
-  name = local.vm_master_b_name
+resource "yandex_compute_instance" "vm-master1-b" {
+  name = local.vm_master1_b_name
 
   boot_disk {
     initialize_params {
@@ -32,20 +33,21 @@ resource "yandex_compute_instance" "vm-master-b" {
     }
   }
   network_interface {
-    subnet_id = yandex_vpc_subnet.public-b.id
+    subnet_id = yandex_vpc_subnet.subnet-master1-b.id
     nat       = true
   }
   resources {
-    cores  = 2
-    memory = 2
+    core_fraction = 5
+    cores         = 2
+    memory        = 2
   }
   metadata = {
     user-data = "${file("./meta.txt")}"
   }
 }
 
-resource "yandex_compute_instance" "vm-master-c" {
-  name = local.vm_master_c_name
+resource "yandex_compute_instance" "vm-master2-a" {
+  name = local.vm_master2_a_name
 
   boot_disk {
     initialize_params {
@@ -53,20 +55,21 @@ resource "yandex_compute_instance" "vm-master-c" {
     }
   }
   network_interface {
-    subnet_id = yandex_vpc_subnet.public-a.id
+    subnet_id = yandex_vpc_subnet.subnet-master2-a.id
     nat       = true
   }
   resources {
-    cores  = 2
-    memory = 2
+    core_fraction = 5
+    cores         = 2
+    memory        = 2
   }
   metadata = {
     user-data = "${file("./meta.txt")}"
   }
 }
 
-resource "yandex_compute_instance" "vm-worker-a" {
-  name = local.vm_worker_a_name
+resource "yandex_compute_instance" "vm-worker1-a" {
+  name = local.vm_worker1_a_name
 
   boot_disk {
     initialize_params {
@@ -74,20 +77,21 @@ resource "yandex_compute_instance" "vm-worker-a" {
     }
   }
   network_interface {
-    subnet_id = yandex_vpc_subnet.public-a.id
+    subnet_id = yandex_vpc_subnet.subnet-worker1-a.id
     nat       = true
   }
   resources {
-    cores  = 2
-    memory = 2
+    core_fraction = 5
+    cores         = 2
+    memory        = 2
   }
   metadata = {
     user-data = "${file("./meta.txt")}"
   }
 }
 
-resource "yandex_compute_instance" "vm-worker-b" {
-  name = local.vm_worker_b_name
+resource "yandex_compute_instance" "vm-worker1-b" {
+  name = local.vm_worker1_b_name
 
   boot_disk {
     initialize_params {
@@ -95,12 +99,13 @@ resource "yandex_compute_instance" "vm-worker-b" {
     }
   }
   network_interface {
-    subnet_id = yandex_vpc_subnet.public-b.id
+    subnet_id = yandex_vpc_subnet.subnet-worker1-b.id
     nat       = true
   }
   resources {
-    cores  = 2
-    memory = 2
+    core_fraction = 5
+    cores         = 2
+    memory        = 2
   }
   metadata = {
     user-data = "${file("./meta.txt")}"
