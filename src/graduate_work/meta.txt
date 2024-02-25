@@ -1,8 +1,8 @@
 #cloud-config
 users:
-  - name: slava
+  - name: root
     groups: sudo
     shell: /bin/bash
     sudo: ['ALL=(ALL) NOPASSWD:ALL']
     ssh_authorized_keys:
-      - ssh-rsa xxx
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCvK8mtnXwTCN96khZkV4Lq7SSNrb7/gzkS4Zunw8W+4NtXumcIaOFf+xKEZ2+E8foxF3tfi3l8cv4PcH2frtZvMr/iMsvR4m4qH8JitLT6Mi63gy+PC4uEHrQbQEQ0moArIZjB1Yx2Xlvlmxi2Rx4eohMrcVZCdOxfL7V5w+Iq/5/b99+5ABatcMh/Q7e3g/fD8TFlLp3fMNVHbSPCUkpUGmso7TS6EZ6ApHU7wsjgaOOjjGRIu3SuLlzlbhtsRkeVwn+t/a+EG3xn2RWOmzgTkHHuTSsr+XpSY9NzuY5uTQwiprEC/Ndr5CglfHN8W3Zp56zXo/MzB+cy7Luw+JI4hUO0KIcBL5v9h3XAb41Q/NS2sd8rWT0IOZKEFiKbXt60LB3XbkvjA1vziFlN9u7qmZQ04umqXbHHvEEPD3X/g5BrAFwO2cnfP8NLNdQCWF8Tdkj6FZ+ABK/+f/m23mgh2bc7Ik8sL9b3wEdqXs0YUBK3AzpLywOHtbfTrDilXU8= root@slava-FLAPTOP-r
