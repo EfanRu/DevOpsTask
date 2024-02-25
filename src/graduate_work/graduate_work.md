@@ -546,6 +546,16 @@ Destroy complete! Resources: 9 destroyed.
 3. Команда `kubectl get pods --all-namespaces` отрабатывает без ошибок.
 
 ---
+
+### Решение создание Kubernetes кластера
+        После создания ресурсов необходимо сохранить созданные IP адреса в hosts.yaml
+
+```commandline
+# Update Ansible inventory file with inventory builder
+declare -a IPS=(10.10.1.3 10.10.1.4 10.10.1.5)
+CONFIG_FILE=inventory/mycluster/hosts.yaml python3 contrib/inventory_builder/inventory.py ${IPS[@]}
+```
+---
 ### Создание тестового приложения
 
 Для перехода к следующему этапу необходимо подготовить тестовое приложение, эмулирующее основное приложение разрабатываемое вашей компанией.
