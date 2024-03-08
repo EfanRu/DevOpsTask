@@ -21,7 +21,7 @@ resource "yandex_compute_instance" "vm-master1-a" {
   resources {
     core_fraction = 100
     cores         = 2
-    memory        = 2
+    memory        = 4
   }
   metadata = {
     user-data = "${file("./meta.txt")}"
@@ -47,7 +47,7 @@ resource "yandex_compute_instance" "vm-master1-b" {
   resources {
     core_fraction = 100
     cores         = 2
-    memory        = 2
+    memory        = 4
   }
   metadata = {
     user-data = "${file("./meta.txt")}"
@@ -73,7 +73,7 @@ resource "yandex_compute_instance" "vm-master1-b" {
 #  resources {
 #    core_fraction = 100
 #    cores         = 2
-#    memory        = 2
+#    memory        = 4
 #  }
 #  metadata = {
 #    user-data = "${file("./meta.txt")}"
@@ -99,7 +99,7 @@ resource "yandex_compute_instance" "vm-master1-b" {
 #  resources {
 #    core_fraction = 100
 #    cores         = 2
-#    memory        = 2
+#    memory        = 4
 #  }
 #  metadata = {
 #    user-data = "${file("./meta.txt")}"
@@ -125,7 +125,7 @@ resource "yandex_compute_instance" "vm-master1-b" {
 #  resources {
 #    core_fraction = 100
 #    cores         = 2
-#    memory        = 2
+#    memory        = 4
 #  }
 #  metadata = {
 #    user-data = "${file("./meta.txt")}"

@@ -1,0 +1,99 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: http-grafana-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /grafana
+        pathType: Prefix
+        backend:
+          service:
+            name: grafana
+            port:
+              number: 3000
+
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: my-app-secret-tls
+data:
+  tls.crt: |
+    MIIDYzCCAkugAwIBAgIUdQ+68qYOOv39X0nzvhxJDkBJoyswDQYJKoZIhvcNAQEL
+    BQAwQTEaMBgGA1UEAwwRZGVtby5tbG9wc2h1Yi5jb20xCzAJBgNVBAYTAlVTMRYw
+    FAYDVQQHDA1TYW4gRnJhbnNpc2NvMB4XDTI0MDMwNTE5NTg0OFoXDTI1MDIyNDE5
+    NTg0OFowQTEaMBgGA1UEAwwRZGVtby5tbG9wc2h1Yi5jb20xCzAJBgNVBAYTAlVT
+    MRYwFAYDVQQHDA1TYW4gRnJhbnNpc2NvMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A
+    MIIBCgKCAQEAqikmrOOqHTeafyJ7k7t7i6puhhuyhQ1G04nvABpmNQEo4iTMEdwa
+    XL+kG2SxHt0HgE4xUSlokrlIzME8v0Py47tSLsYpSbYZXvrbpWOz1Y8ODveTyJ+z
+    gDwlizDDcYFUozF1SEpuUa/6dDUrhME/+h7KvyVpbgJeOkxnH7usc/10EORUhJCI
+    3tbyIDFtJ9xZyqkb1WHsh7x4r23P+R4Zklhehgp5rRZ6EIkKkoIL/hbHZZVZrerp
+    u9UR2zDh/cECsktdNFeU1qmgldFp4fVHuyFmUlKSG/tjqLqiTFyz3y9E45QOG5ag
+    PUs3NxRG04mnM83u67NlUQvpOcfywJuXwwIDAQABo1MwUTAdBgNVHQ4EFgQUmlUK
+    mVEEjLj76hNJe3RRYe1GA3YwHwYDVR0jBBgwFoAUmlUKmVEEjLj76hNJe3RRYe1G
+    A3YwDwYDVR0TAQH/BAUwAwEB/zANBgkqhkiG9w0BAQsFAAOCAQEAbeu+ngk9m1v7
+    8kb+Jv8y0YTSAB5o8XMGcjyKO7XKuKmeFBnbV7PfNi1xJZDYkBosA+G71cPojTtD
+    FaktbeyQJ4ufCkueyyJRWGz8VNSAbErDHSPetIc0SDLMp2CEbc/y50jadhETtE+d
+    3LKUrh+FBuXL3rx1VH/FUWhPIzNKPb4XTbQ8YsDuaszTbzFA++A0VOOK94OKeF9y
+    350ptZ10/DnTlJofl9hGvNylbKKGQ645Abzh3WDqTGVLWbwAMDVA0ydVjS5HUJAv
+    GP3pOKGCq4A3ZaKdvkj4WTWSoS013jz/KFYnHml2GbHlf2lyVG8RVp2NhsQwlIvS
+    ATlnYkxsrg==
+  tls.key: |
+    MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCqKSas46odN5p/
+    InuTu3uLqm6GG7KFDUbTie8AGmY1ASjiJMwR3Bpcv6QbZLEe3QeATjFRKWiSuUjM
+    wTy/Q/Lju1IuxilJthle+tulY7PVjw4O95PIn7OAPCWLMMNxgVSjMXVISm5Rr/p0
+    NSuEwT/6Hsq/JWluAl46TGcfu6xz/XQQ5FSEkIje1vIgMW0n3FnKqRvVYeyHvHiv
+    bc/5HhmSWF6GCnmtFnoQiQqSggv+FsdllVmt6um71RHbMOH9wQKyS100V5TWqaCV
+    0Wnh9Ue7IWZSUpIb+2OouqJMXLPfL0TjlA4blqA9Szc3FEbTiaczze7rs2VRC+k5
+    x/LAm5fDAgMBAAECggEAB/qP/rFaK66MxwNV6hJzc5QVRKKN12FM/eRM2aNjQX8B
+    bMEu9HNupQSzbDlneLwCewivlU+swJyBhmBVOd60x+rjqp/OFc+9FtAKdpHbP9tK
+    XHdNba3XW972H7W0pGDdGB3ckvwyehAXXVWU6c+p8U96UEYv0GG6C1/DwiApsPKQ
+    5fynN4KBBlqK5jQMX29JToUNuYO84yXASYFBiCSr5O1vqNTT/18JCZDhc0K9gurG
+    6Xhf+fnkHW2tZdFLcdzrKCF8IngL9QH07H1/qflXsKfqusaDS2Bd2CqWU48riikG
+    x00WsQ+aeDyvMZiE6tV8I4GyfWbjyYTgUSKTBXBjmQKBgQDX/vaKOIj594LKq09S
+    TsgqTRB/1pXUOEVs23Z3w2aHzOPAUX5VMKG5PeZyFQhizf+RPazH1x2Otk2n4Che
+    X+mfha5Klvr2/MZUCXjOg4FMRvWlFUo5RjDc+nXpHdWiEhggMlE6WQSvocqRRkYV
+    22LHaKNOfLTshzm0XIbCl27SpwKBgQDJrP/Ec7TfuPaUhoxrCBeKD4TDGhVJoyJ0
+    RczwSzFxe15o3fOfg0jRGckU8Ba2S6QYumuSuefsMp1r2vxpsfif+9NzFk6rQkcb
+    BvALdbHoIHsdEUbSI2CgIMdOdEv/R5Ywvpnh/jFYAPToZUqbp7pUFv0kTI6TaYwT
+    inUTK06BhQKBgQCpla394dtx3unas9vodKBlzfHZXSJv5+piSIDgEROsJarfcVxu
+    CGvBZB9NjMPzx2cTosfIc1Xqmamo1676QfXMYInyWE4co2QX0QP/qHJY8BGnlmqb
+    Q0fUB/WRnPIBeJFmnfr2g7PRLYc8vl8ChCgvBjHJytHGL3mX6VmI6JqDWwKBgBDF
+    bDegD6iTLx5G2iKEd8Cpbbbz0lVfVZwpudM5zZDMW5uI6ZuYRVPuOwScuqbKP4k2
+    5386Kok/5Et12IvJmw1i2cC2WDBxwIwE1a1+Sh8tpE9UgnkzK/PlBe4GSdOe1mST
+    VSSwCNZyrestkTjEiAA6MS71lt23Z0iwuO+xKEQpAoGAGtSCnzaWz1OpDxaFI/R4
+    cyHMgOj8u/tCr2nmn/6hTyT62HTLSYBfxbpiBiQqqphTHdxkgsLy4A1e9zxFPpEM
+    Q5KKLigs8fWmHUyGJ1uCxD+YneEzemoKixo5B7qRKaWMHHx0CN/eHTP2GPG1VoJ2
+    pGafjKjiJyfsLI9rQlMRIUE=
+
+type: kubernetes.io/tls
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: http-grafana-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /grafana
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /grafana
+        pathType: Prefix
+        backend:
+          service:
+            name: grafana
+            port:
+              number: 3000
+  tls:
+    - hosts:
+      - grafana
+      secretName: my-app-secret-tls
