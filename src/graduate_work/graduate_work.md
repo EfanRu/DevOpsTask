@@ -131,9 +131,12 @@ ansible-playbook -i inventory/mycluster/hosts.yaml  --become --become-user=root 
 ---
 ### Решение создание тестового приложения
 
-1. Git репозиторий с тестовым приложением и Dockerfile: https://github.com/EfanRu/JM_my_web4_spring_boot
-2. Регистри с собранным docker image: не очень понятно зачем делать, если код собирается из git в .jar, а потом 
-через docker-compose мы сразу запускаем тестовое приложение.
+1. Git репозиторий с тестовым приложением и Dockerfile: 
+    - https://github.com/EfanRu/JM_my_web4_spring_boot
+    - [Dockerfile](docker%2FDockerfile)
+    - [docker-compose.yml](docker%2Fdocker-compose.yml)
+2. Регистри с собранным docker image: https://hub.docker.com/repository/docker/ledok/jm_my_web4_spring_boot/general
+3. Манифест запуска приложения + postgres на kubernetes: [manifest_app_deploy.yaml](manifest_app_deploy.yaml)
 
 ---
 ### Подготовка cистемы мониторинга и деплой приложения
@@ -184,6 +187,55 @@ ansible-playbook -i inventory/mycluster/hosts.yaml  --become --become-user=root 
 1. Интерфейс ci/cd сервиса доступен по http.
 2. При любом коммите в репозиторие с тестовым приложением происходит сборка и отправка в регистр Docker образа.
 3. При создании тега (например, v1.0.0) происходит сборка и отправка с соответствующим label в регистри, а также деплой соответствующего Docker образа в кластер Kubernetes.
+
+---
+### Решение установка и настройка CI/CD
+
+    Для текущего состояния кластера достаточно одного мастера Jenkins. Работу с агентами не стал удалять, а закомментил.
+[jenkins.yml](infrastructure%2Fjenkins.yml)
+
+```commandline
+ansible-playbook -i infrastructure/inventory/cicd/hosts.yml --become --become-user=root --key-file /root/.ssh/id_rsa infrastructure/jenkins.yml
+```
+
+Ожидаемый результат:
+
+1. Интерфейс ci/cd сервиса доступен по http: http://51.250.94.236:8080 reviewer:reviewer
+2. При любом коммите в репозиторие с тестовым приложением происходит сборка и отправка в регистр Docker образа.
+
+```commandline
+slava@slava-FLAPTOP-r:~/Documents/JM_my_web4_spring_boot$ git push origin 
+Enumerating objects: 11, done.
+Counting objects: 100% (11/11), done.
+Delta compression using up to 12 threads
+Compressing objects: 100% (6/6), done.
+Writing objects: 100% (6/6), 547 bytes | 547.00 KiB/s, done.
+Total 6 (delta 2), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+To github.com:EfanRu/JM_my_web4_spring_boot.git
+   70aaa15..ee76df0  master -> master
+```
+
+![git_push.png](screenshots%2Fgit_push.png)
+
+![git_push_jenkins.png](screenshots%2Fgit_push_jenkins.png)
+
+![git_push_docker_hub.png](screenshots%2Fgit_push_docker_hub.png)
+
+3. При создании тега (например, v1.0.0) происходит сборка и отправка с соответствующим label в регистри, а также деплой соответствующего Docker образа в кластер Kubernetes.
+
+```commandline
+slava@slava-FLAPTOP-r:~/Documents/JM_my_web4_spring_boot$ git push origin v.0.0.113
+Total 0 (delta 0), reused 0 (delta 0), pack-reused 0
+To github.com:EfanRu/JM_my_web4_spring_boot.git
+ * [new tag]         v.0.0.113 -> v.0.0.113
+```
+
+![git_push_tag.png](screenshots%2Fgit_push_tag.png)
+
+![git_push_tag_docker_hub.png](screenshots%2Fgit_push_tag_docker_hub.png)
+
+![git_psuh_tag_jenkins.png](screenshots%2Fgit_psuh_tag_jenkins.png)
 
 ---
 ## Что необходимо для сдачи задания?

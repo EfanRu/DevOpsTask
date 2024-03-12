@@ -1,0 +1,11 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: network-policy-grafana
+  namespace: monitoring
+spec:
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              app: ingress-nginx

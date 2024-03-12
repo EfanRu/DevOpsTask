@@ -1,0 +1,8 @@
+---
+user_group: "{{ jenkins_user_group }}"
+user_name: "{{ jenkins_user_name }}"
+jenkins_user_name: root
+jenkins_user_group: root
+java_packages:
+  - openjdk-11-jre-headless
+jenkins_agent_dir: /opt/jenkins_agent/
