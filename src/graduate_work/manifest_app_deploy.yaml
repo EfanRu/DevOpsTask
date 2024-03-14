@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: app-deployment
+  namespace: app
   labels:
     app: app
 spec:
@@ -39,14 +40,7 @@ spec:
                 name: configmap
                 key: SPRING_JPA_HIBERNATE_DDL_AUTO
         ports:
-          - containerPort: 8080
-            name: web1
-            protocol: TCP
-#        volumeMounts:
-#          - name: nginx-index
-#            mountPath: /usr/share/nginx/html/
-##          - name: nginx-conf
-##            mountPath: /etc/nginx/
+          - containerPort: 80
       - name: postgres
         image: postgres:13.3
         env:
@@ -67,18 +61,10 @@ spec:
                 key: POSTGRES_PASSWORD
         ports:
           - containerPort: 5432
-            name: web2
-            protocol: TCP
       volumes:
-        - name: nginx-index
+        - name: configmap
           configMap:
             name: configmap
-        - name: nginx-conf
-          configMap:
-            name: my-nginx-config
-        - name: secret-volume
-          secret:
-            secretName: my-app-secret-tls
 
 
 ---
@@ -87,14 +73,19 @@ apiVersion: v1
 kind: Service
 metadata:
   name: app-db-svc
+  namespace: app
 spec:
   selector:
     app: app
   ports:
     - name: web1
-      port: 8080
+      port: 80
+      targetPort: 80
+      protocol: TCP
     - name: web2
       port: 5432
+      targetPort: 5432
+      protocol: TCP
 
 ---
 
@@ -102,6 +93,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: configmap
+  namespace: app
 data:
   SPRING_DATASOURCE_URL: "jdbc:postgresql://localhost:5432/test"
   SPRING_DATASOURCE_USERNAME: "postgres"

@@ -166,7 +166,7 @@ ansible-playbook -i inventory/mycluster/hosts.yaml  --become --become-user=root 
     Для развертывания использовал Kube-prometheus.
 
 1. Git репозиторий с конфигурационными файлами для настройки Kubernetes: https://github.com/prometheus-operator/kube-prometheus
-2. Http доступ к web интерфейсу grafana: !!!IN_WORK
+2. Http доступ к web интерфейсу grafana: http://158.160.103.207:31333 admin:admin1264
 3. Дашборды в grafana отображающие состояние Kubernetes кластера. !!!IN_WORK
 4. Http доступ к тестовому приложению. !!!IN_WORK
 
