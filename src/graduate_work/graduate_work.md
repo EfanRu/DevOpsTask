@@ -67,6 +67,10 @@ slava@slava-FLAPTOP-r:~$ export TF_VAR_YC_CLOUD_ID=$(yc config get cloud-id)
 slava@slava-FLAPTOP-r:~$ export TF_VAR_YC_FOLDER_ID=$(yc config get folder-id)
 ```
 
+    Конфигурационный файл терраформа:
+
+[main.tf](main.tf)
+
 ---
 ### Создание Kubernetes кластера
 
@@ -95,6 +99,8 @@ slava@slava-FLAPTOP-r:~$ export TF_VAR_YC_FOLDER_ID=$(yc config get folder-id)
         Для развертывания Kubernetes на нодах будем использовать https://github.com/kubernetes-sigs/kubespray .
         После создания ресурсов необходимо сохранить созданные IP адреса в hosts.yaml. Указывать при этом в ansible_host 
         публичный IP адрес, а ip и access_ip нужно указать внутренний, иначе Kubespray не отработает корректно.
+        Так как у меня закончился промокод на яндекс клауд, то я оставил создание 2 ВМ, так как тратятся уже мои личные деньги.
+        Но в коде я закомментил вариант для создания ВМ в 3х разных зонах с 3 мастер нодами и 2 воркер нодами.
 
 ```commandline
 # Change enviroments for kubespray pip and install etcd
@@ -136,7 +142,7 @@ ansible-playbook -i inventory/mycluster/hosts.yaml  --become --become-user=root 
     - [Dockerfile](docker%2FDockerfile)
     - [docker-compose.yml](docker%2Fdocker-compose.yml)
 2. Регистри с собранным docker image: https://hub.docker.com/repository/docker/ledok/jm_my_web4_spring_boot/general
-3. Манифест запуска приложения + postgres на kubernetes: [manifest_app_deploy.yaml](manifest_app_deploy.yaml)
+3. Манифест запуска приложения + postgres на kubernetes: [manifest_app_deploy.yaml](inventory%2Fmanifest_app_deploy.yaml)
 
 ---
 ### Подготовка cистемы мониторинга и деплой приложения
@@ -163,12 +169,25 @@ ansible-playbook -i inventory/mycluster/hosts.yaml  --become --become-user=root 
 ---
 ### Решение подготовка cистемы мониторинга и деплой приложения
 
-    Для развертывания использовал Kube-prometheus.
+    Для развертывания использовал Kube-prometheus. А для доступа не получилось настроить Ingress-controller (потратил кучу 
+    сил и времени), так что реализовал через NodePort http доступ.
+
+```commandline
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm install my-prometheus-stack prometheus-community/kube-prometheus-stack
+```
+
+    Создание NodePort:
+
+[manifest_app_deploy.yaml](inventory%2Fmanifest_app_deploy.yaml)
 
 1. Git репозиторий с конфигурационными файлами для настройки Kubernetes: https://github.com/prometheus-operator/kube-prometheus
-2. Http доступ к web интерфейсу grafana: http://158.160.103.207:31333 admin:admin1264
-3. Дашборды в grafana отображающие состояние Kubernetes кластера. !!!IN_WORK
-4. Http доступ к тестовому приложению. !!!IN_WORK
+2. Http доступ к web интерфейсу grafana: http://51.250.8.232:30036
+3. Дашборды в grafana отображающие состояние Kubernetes кластера. http://51.250.8.232:30036/d/efa86fd1d0c121a26444b636a3f509a8/kubernetes-compute-resources-cluster?orgId=1&refresh=10s
+
+![grafana_dashboard.png](screenshots%2Fgrafana_dashboard.png)
+
+4. Http доступ к тестовому приложению. http://51.250.8.232:30037
 
 ---
 ### Установка и настройка CI/CD
@@ -200,51 +219,76 @@ ansible-playbook -i infrastructure/inventory/cicd/hosts.yml --become --become-us
 
 Ожидаемый результат:
 
-1. Интерфейс ci/cd сервиса доступен по http: http://51.250.94.236:8080 reviewer:reviewer
+1. Интерфейс ci/cd сервиса доступен по http: http://51.250.8.232:8080
 2. При любом коммите в репозиторие с тестовым приложением происходит сборка и отправка в регистр Docker образа.
 
 ```commandline
-slava@slava-FLAPTOP-r:~/Documents/JM_my_web4_spring_boot$ git push origin 
+slava@slava-FLAPTOP-r:~/Documents/JM_my_web4_spring_boot$ git push origin
 Enumerating objects: 11, done.
 Counting objects: 100% (11/11), done.
 Delta compression using up to 12 threads
 Compressing objects: 100% (6/6), done.
-Writing objects: 100% (6/6), 547 bytes | 547.00 KiB/s, done.
+Writing objects: 100% (6/6), 550 bytes | 550.00 KiB/s, done.
 Total 6 (delta 2), reused 0 (delta 0), pack-reused 0
 remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
 To github.com:EfanRu/JM_my_web4_spring_boot.git
-   70aaa15..ee76df0  master -> master
+   ad0eb58..401395f  master -> master
 ```
 
 ![git_push.png](screenshots%2Fgit_push.png)
 
-![git_push_jenkins.png](screenshots%2Fgit_push_jenkins.png)
-
 ![git_push_docker_hub.png](screenshots%2Fgit_push_docker_hub.png)
+
+![git_push_jenkins.png.png](screenshots%2Fgit_push_jenkins.png.png)
 
 3. При создании тега (например, v1.0.0) происходит сборка и отправка с соответствующим label в регистри, а также деплой соответствующего Docker образа в кластер Kubernetes.
 
 ```commandline
-slava@slava-FLAPTOP-r:~/Documents/JM_my_web4_spring_boot$ git push origin v.0.0.113
-Total 0 (delta 0), reused 0 (delta 0), pack-reused 0
+slava@slava-FLAPTOP-r:~/Documents/JM_my_web4_spring_boot$ git push origin
+Enumerating objects: 11, done.
+Counting objects: 100% (11/11), done.
+Delta compression using up to 12 threads
+Compressing objects: 100% (6/6), done.
+Writing objects: 100% (6/6), 550 bytes | 550.00 KiB/s, done.
+Total 6 (delta 2), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
 To github.com:EfanRu/JM_my_web4_spring_boot.git
- * [new tag]         v.0.0.113 -> v.0.0.113
+   ad0eb58..401395f  master -> master
 ```
 
 ![git_push_tag.png](screenshots%2Fgit_push_tag.png)
 
-![git_push_tag_docker_hub.png](screenshots%2Fgit_push_tag_docker_hub.png)
+![git_pusg_tag_docker_hub.png](screenshots%2Fgit_pusg_tag_docker_hub.png)
 
-![git_psuh_tag_jenkins.png](screenshots%2Fgit_psuh_tag_jenkins.png)
+![git_push_tag_jenkins.png](screenshots%2Fgit_push_tag_jenkins.png)
+
+![git_push_tag_jenkins_k8s.png](screenshots%2Fgit_push_tag_jenkins_k8s.png)
 
 ---
 ## Что необходимо для сдачи задания?
 
 1. Репозиторий с конфигурационными файлами Terraform и готовность продемонстрировать создание всех ресурсов с нуля.
+    https://github.com/EfanRu/DevOpsTask/tree/main/src/graduate_work
 2. Пример pull request с комментариями созданными atlantis'ом или снимки экрана из Terraform Cloud или вашего CI-CD-terraform pipeline.
+    Terraform cloud не использовал, настраивать CI-CD-terraform pipeline через jenkins не сделал, так как вообще не понял 
+что тут делать и побоялся сломать свой кластер, в котором уже все настроено. 
 3. Репозиторий с конфигурацией ansible, если был выбран способ создания Kubernetes кластера при помощи ansible.
+    Делал через kube-spray.
 4. Репозиторий с Dockerfile тестового приложения и ссылка на собранный docker image.
+
+https://hub.docker.com/repository/docker/ledok/jm_my_web4_spring_boot/general
+
+[Dockerfile](docker%2FDockerfile)
+
 5. Репозиторий с конфигурацией Kubernetes кластера.
+
+[inventory](inventory)
+
 6. Ссылка на тестовое приложение и веб интерфейс Grafana с данными доступа.
+
+http://158.160.87.3:30037/ - test app
+
+http://158.160.87.3:30036 - grafana 
+
 7. Все репозитории рекомендуется хранить на одном ресурсе (github, gitlab)
 
