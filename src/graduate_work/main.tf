@@ -1,7 +1,5 @@
 locals {
   network_shared_name = "vpc-shared"
-  network_a_name      = "vpc-a"
-  network_b_name      = "vpc-b"
   subnet_name_a       = "subnet-a"
   subnet_name_b       = "subnet-b"
   zone_a              = "ru-central1-a"

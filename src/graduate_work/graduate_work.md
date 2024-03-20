@@ -270,7 +270,22 @@ To github.com:EfanRu/JM_my_web4_spring_boot.git
 1. Репозиторий с конфигурационными файлами Terraform и готовность продемонстрировать создание всех ресурсов с нуля.
     https://github.com/EfanRu/DevOpsTask/tree/main/src/graduate_work
 2. Пример pull request с комментариями созданными atlantis'ом или снимки экрана из Terraform Cloud или вашего CI-CD-terraform pipeline.
-    Test 2
+   По совету куратора, чтобы не поломать уже настроенный кластер я выполнял только команду terraform plan. 
+   Из нюансов, можно было бы вначале засетить создание токена YC, который живет сутки, но этого делать не стал, так как 
+   это не очень безопасно тем более, что мой дженкинс работает на открытом протоколе http. А через сутки пайп перестанет работать.
+   Тут ещё как решение, можно было бы найти как сделать постоянный токен, но надеюсь в этом нет необходимости.
+   - WebHook github
+
+![terraform_CI_github_webhook.png](screenshots%2Fterraform_CI_github_webhook.png)
+
+   - Jenkins build http://51.250.8.232:8080/job/terraform%20CI/
+
+![terraform_CI_jenkins_build.png](screenshots%2Fterraform_CI_jenkins_build.png)
+
+   - Jenkins build console terraform plan http://51.250.8.232:8080/job/terraform%20CI/13/console
+
+![terraform_CI_jenkins_console.png](screenshots%2Fterraform_CI_jenkins_console.png)
+
 3. Репозиторий с конфигурацией ansible, если был выбран способ создания Kubernetes кластера при помощи ansible.
     Делал через kube-spray.
 4. Репозиторий с Dockerfile тестового приложения и ссылка на собранный docker image.
