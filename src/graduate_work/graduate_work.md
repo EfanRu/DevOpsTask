@@ -270,8 +270,7 @@ To github.com:EfanRu/JM_my_web4_spring_boot.git
 1. Репозиторий с конфигурационными файлами Terraform и готовность продемонстрировать создание всех ресурсов с нуля.
     https://github.com/EfanRu/DevOpsTask/tree/main/src/graduate_work
 2. Пример pull request с комментариями созданными atlantis'ом или снимки экрана из Terraform Cloud или вашего CI-CD-terraform pipeline.
-    Terraform cloud не использовал, настраивать CI-CD-terraform pipeline через jenkins не сделал, так как вообще не понял 
-что тут делать и побоялся сломать свой кластер, в котором уже все настроено. 
+    Test 
 3. Репозиторий с конфигурацией ansible, если был выбран способ создания Kubernetes кластера при помощи ansible.
     Делал через kube-spray.
 4. Репозиторий с Dockerfile тестового приложения и ссылка на собранный docker image.
